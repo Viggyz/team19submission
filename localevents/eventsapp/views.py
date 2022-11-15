@@ -13,3 +13,4 @@ class LocationsAPIView(APIView):
         serializer = LocationListSerializer(data=sorted(response_json, key=lambda loc: loc['dist']), many=True)
         if serializer.is_valid():
             return Response(serializer.data, status.HTTP_200_OK)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)

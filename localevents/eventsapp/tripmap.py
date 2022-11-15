@@ -6,7 +6,6 @@ from decouple import config
 
 BASE_API_URL = 'https://api.opentripmap.com/0.1/en/places'
 KINDS = ['gardens_and_parks','sport']
-RATE = 1
 RESPONSE_FORMAT = 'json'
 
 class TripPlacesAPI:
@@ -17,7 +16,6 @@ class TripPlacesAPI:
             'lon': lon,
             'lat': lat,
             'kinds': ','.join(KINDS),
-            'rate': RATE,
             'format': RESPONSE_FORMAT,
             'apikey': config('TRIPMAP_APIKEY')
         }        
