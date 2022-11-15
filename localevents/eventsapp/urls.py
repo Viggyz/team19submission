@@ -1,4 +1,8 @@
 from django.contrib import admin
 from django.urls import path
 
-urlpatterns = []
+from .views import * 
+
+urlpatterns = [
+    path('locations', LocationsAPIView.as_view())
+]
