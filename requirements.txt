@@ -12,3 +12,4 @@ whitenoise==6.2.0
 
 djangorestframework==3.14.0
 django-cors-headers==3.13.0
+django-rest-knox==4.2.0
