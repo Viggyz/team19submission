@@ -10,5 +10,5 @@ urlpatterns = [
     path('auth/signup', SignUpAPIView.as_view()),
 
     path('locations', LocationsAPIView.as_view()),
-
+    path('search', SearchAPIView.as_view()),
 ]
