@@ -55,4 +55,5 @@ class Event(models.Model):
         ]
     
     @classmethod
-    def create(cls, )
+    def create(cls, idk):
+        pass

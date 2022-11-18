@@ -10,5 +10,8 @@ urlpatterns = [
     path('auth/signup', SignUpAPIView.as_view()),
 
     path('locations', LocationsAPIView.as_view()),
+    path('locations/<str:osm_id>', LocationAPIView.as_view()),
+    path('locations/<str:osm_id>/events', LocationEventsAPIView.as_view()),
+    
     path('search', SearchAPIView.as_view()),
 ]

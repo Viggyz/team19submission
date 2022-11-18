@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'whitenoise.runserver_nostatic',
     'corsheaders',
-    'knox'
+    'knox',
+
+    'localevents.eventsapp',
 ]
 
 MIDDLEWARE = [
@@ -117,11 +119,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # DEFAULT_AUTO_FIELD = 'django.db.models.UUIDField'
 
 # # Rest Framework
-REST_FRAMEWORK  = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'knox.auth.TokenAuthentication',
-    )
-}
+# REST_FRAMEWORK  = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         # 'knox.auth.TokenAuthentication',
+#     )
+# }
 # REST_FRAMEWORK = {
 #     'DEFAULT_RENDERER_CLASSES': [
 #         'rest_framework.renderers.JSONRenderer',
