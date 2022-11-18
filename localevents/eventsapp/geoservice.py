@@ -43,7 +43,7 @@ class GeoServiceClient:
         query_params = {
             'q': query,
 
-            'countrycodes': 'ae',
+            'countrycodes': 'in',
             'tag': 'place:*',
             
             'dedupe': 1,
