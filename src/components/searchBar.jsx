@@ -1,6 +1,6 @@
 import React from "react";
 
-import { TextField, Autocomplete, Grid, Typography } from "@mui/material";
+import {Paper, TextField, Autocomplete, Grid, Typography } from "@mui/material";
 import axios from "axios";
 
 function SearchBar({ setUserCoords}) {
@@ -66,12 +66,16 @@ function SearchBar({ setUserCoords}) {
             }
         }}
         renderInput={(params) => (
-            <TextField 
+            <Paper elevation={5} sx = {{
+              minWidth: '500px'
+            }}>
+              <TextField 
                 {...params} 
                 sx={{margin: '1rem', backgroundColor: 'white' }} 
                 label="Add a location" 
                 InputLabelProps={{ disabled: true}}
             />
+            </Paper>
         )}
         renderOption={(props, option) => {
             return (
