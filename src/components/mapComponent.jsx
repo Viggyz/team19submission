@@ -3,7 +3,7 @@ import {useRef, useState, useEffect} from "react"
 
 import maplibregl, { Marker } from "maplibre-gl";
 
-import { getLocations } from "../services/locations";
+import { Locations } from "../api.service";
 
 
 
@@ -52,7 +52,7 @@ function MapComponent({userCoords, handleMarkerClick, setIsSignUp, setIsLogin}) 
                 center: [userCoords.longitude, userCoords.latitude],
                 zoom: 14,
             })
-            getLocations(userCoords.longitude, userCoords.latitude).then(
+            Locations.list(userCoords.longitude, userCoords.latitude).then(
                 (response) => {
                 addMarkers(response.data);
             });

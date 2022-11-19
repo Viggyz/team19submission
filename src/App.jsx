@@ -11,6 +11,7 @@ import MapComponent from "./components/mapComponent";
 import SearchBar  from "./components/searchBar";
 import EventsBlock from "./components/eventBlock";
 import AuthModal from "./components/authModal";
+import { Locations } from "./api.service";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
@@ -19,8 +20,7 @@ function App() {
 
   function callEventsAPI(location) {
     if(location) {
-      let osm_type_id = encode_location_id(location);
-      axios.get(`http://localhost:8000/api/locations/${osm_type_id}/events`)
+      Locations.events(location)
       .then(data => {
         return setCurrentEvents(data);
       })

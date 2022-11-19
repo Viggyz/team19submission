@@ -1,13 +1,13 @@
 import React from "react";
 
 import {Paper, TextField, Autocomplete, Grid, Typography } from "@mui/material";
-import axios from "axios";
+
+import {searchPlaces} from "../api.service";
 
 function SearchBar({ setUserCoords}) {
   const [value, setValue] = React.useState(null);
   const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
-  const loaded = React.useRef(false);
 
   const debounce = (func) => {
     let  timer;
@@ -23,16 +23,11 @@ function SearchBar({ setUserCoords}) {
   
   function callSearchAPI(inputText) {
       if (inputText.length > 3) {
-        inputText = new URLSearchParams(inputText);
-        axios
-          .get(
-            `http://localhost:8000/api/search?q=${inputText}`
-          )
-          .then(({ data }) => {
-            // handle its a bad request
-            setOptions(data);
-            // setUserCoords(coords);
-          });
+        searchPlaces(inputText)
+        .then(({ data }) => {
+          // handle its a bad request
+          setOptions(data);
+        });
       }
     }
 

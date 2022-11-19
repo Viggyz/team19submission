@@ -28,7 +28,7 @@ function AuthModal({openAuthModal, handleClose}) {
             "password": loginPassword,
         }
         )
-        .then(({data})=>{window.localStorage.setItem("access", data.access);window.localStorage.setItem("refresh", data.refresh);});
+        .then(({data})=>{});
     };
     
     return (
