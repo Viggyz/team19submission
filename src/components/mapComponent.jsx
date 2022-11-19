@@ -7,7 +7,7 @@ import { getLocations } from "../services/locations";
 
 
 
-function MapComponent({userCoords, handleMarkerClick}) {
+function MapComponent({userCoords, handleMarkerClick, setIsSignUp, setIsLogin}) {
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [locations, setLocations] = useState([]);
@@ -59,7 +59,7 @@ function MapComponent({userCoords, handleMarkerClick}) {
     },[userCoords])
     
     return (
-        <div className="map" ref={mapContainer}>
+        <div className="map"  onClick={()=>{setIsSignUp(false); console.log("clicked"); setIsLogin(true)}} ref={mapContainer}>
         </div>
     )
 }

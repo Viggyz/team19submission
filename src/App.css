@@ -13,6 +13,7 @@
   height: 100%;
   box-sizing: border-box;
   z-index: 0;
+
 }
 
 #marker {
@@ -38,4 +39,48 @@ background-size: contain;
 width: 30px;
 height: 30px;
 
+}
+
+.side-box{
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  position: absolute;
+  right: 1em;
+  top: 10%;
+  height: 80%;
+  width: 20em;
+  /* z-index: 20; */
+  align-items: center;
+}
+
+.event-list{
+  display: flex;
+  flex-direction: column;
+  margin-top: 2em;
+}
+
+.signup-box{
+  z-index: 30;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  top: 0;
+  bottom: 0;
+  height: fit-content;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto; 
+  margin-right: auto; 
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 2em;
+}
+.signup-button{
+  position: absolute;
+  right: 1em;
+  top: 1em;
 }
