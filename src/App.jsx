@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-import { Button, TextField, Typography, Modal, Box } from "@mui/material";
-
-import axios from "axios";
-
-import { encode_location_id } from "./utils";
+import { Button, Box, Snackbar, Alert } from "@mui/material";
 
 import MapComponent from "./components/mapComponent";
 import SearchBar  from "./components/searchBar";
@@ -17,6 +13,14 @@ function App() {
   const [userCoords, setUserCoords] = useState();
   const [currentLocation, setCurrentLocation] = useState(null);
   const [currentEvents, setCurrentEvents] = useState(null);
+
+  const [snackbarState, setsnackbarState] = useState({
+    open: false,
+    message: "",
+    severity: ""
+  })
+  const [isSignup, setIsSignUp] = useState(false);
+  const [openAuthModal, setOpenAuthModal] = useState(false);
 
   function callEventsAPI(location) {
     if(location) {
@@ -39,14 +43,20 @@ function App() {
     }
   }
  
-  const [isSignup, setIsSignUp] = useState(false);
-  
-  const [openAuthModal, setOpenAuthModal] = useState(false);
-
   const handleOpen = () => setOpenAuthModal(true);
   const handleClose = () => setOpenAuthModal(false);
   
-  const [isLogin, setIsLogin] = useState(false);
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setsnackbarState({
+      ...snackbarState,
+      open:false
+    });
+  };
+
   
   const style = {
     position: "absolute",
@@ -66,10 +76,21 @@ function App() {
   }, []);
   return (
     <div className="map-wrap">
+      <Snackbar 
+        sx={{zIndex: '10'}}
+        open={snackbarState.open}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        // message={snackbarState.message}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarState.severity} sx={{ width: '100%' }}>
+          {snackbarState.message}
+        </Alert>
+      </Snackbar>
       <MapComponent
         userCoords={userCoords}
         setIsSignUp={setIsSignUp}
-        setIsLogin={setIsLogin}
         handleMarkerClick={handleMarkerClick}
       ></MapComponent>
       <SearchBar setUserCoords={setUserCoords}></SearchBar>
@@ -80,6 +101,7 @@ function App() {
       <AuthModal
         handleClose={handleClose}
         openAuthModal={openAuthModal}
+        setsnackbarState={setsnackbarState}
       >
 
       </AuthModal>

@@ -1,9 +1,19 @@
 import React from 'react';
-import axios from 'axios';
 
-import {Link, Modal, Paper,Box, TextField, Button, Typography} from "@mui/material";
+import {
+  Link,
+  Modal, 
+  Paper,
+  Box, 
+  TextField, 
+  Button, 
+  Typography,
+} from "@mui/material";
 
-function AuthModal({openAuthModal, handleClose}) {
+
+import {Auth} from "../api.service";
+
+function AuthModal({openAuthModal, handleClose, setsnackbarState}) {
     const [loginDetails, setLoginDetails] = React.useState({
       username: "",
       password: "",
@@ -16,19 +26,24 @@ function AuthModal({openAuthModal, handleClose}) {
     const [isSignUp, setIsSignUp] = React.useState(0);
 
     const handleSignUp = () => {
-        axios.post("http://localhost:8000/api/auth/signup",signUpDetails)
-        .then((response)=>{console.log(response)});
+        Auth.signUp(signUpDetails)
+        .then(()=>{
+          setsnackbarState({open: true, message: "Succesfully signed up!", severity: "success"});
+          handleClose();
+        })
+        .catch(() => setsnackbarState({open: true, message: "Unable to sign up", severity: "error"}))
       };
     
     const handleLogin = () => {
-        console.log(loginUsername, loginPassword);
-        axios.post("http://localhost:8000/api/auth/login",
-        {
-            "username": loginUsername,
-            "password": loginPassword,
-        }
-        )
-        .then(({data})=>{});
+        Auth.login(loginDetails)
+        .then(() => {
+          setsnackbarState({open: true, message: "Succesfully logged in!", severity: "success"});
+          handleClose();
+        })
+        .catch((err)=> {
+          console.log(err);
+          setsnackbarState({open: true, message: "Unable to log in", severity: "error"});
+        });
     };
     
     return (

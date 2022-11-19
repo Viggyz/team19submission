@@ -43,7 +43,7 @@ export function searchPlaces(query) {
 }
 
 export class Auth {
-  static login(username, password) {
+  static login({username, password}) {
     return new Promise((resolve, reject) => {
       Client.post("auth/login", {
         username,
