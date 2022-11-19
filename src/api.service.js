@@ -34,15 +34,6 @@ AuthClient.interceptors.response.use(
   }
 );
 
-export function getLocations(lon, lat) {
-  
-}
-
-export function getLocation(location) {
-  let location_id = encode_location_id(location);
-  return Client.get(`locations/${location_id}`);
-}
-
 export function searchPlaces(query) {
   return Client.get("search", {
     params: {
