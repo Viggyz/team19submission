@@ -1,15 +1,38 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+import axios from "axios";
+
+import { encode_location_id } from "./utils";
 
 import MapComponent from "./components/mapComponent";
 import SearchBar  from "./components/searchBar";
-import {Button, TextField, Typography, Modal, Box} from "@mui/material"
-import axios from "axios";
+import EventsBlock from "./components/eventBlock";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [currentEvents, setCurrentEvents] = useState(null);
+
+  function callEventsAPI(location) {
+    if(location) {
+      let osm_type_id = encode_location_id(location);
+      axios.get(`http://localhost:8000/api/locations/${osm_type_id}/events`)
+      .then(data => {
+        return setCurrentEvents(data);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          setCurrentEvents([])
+        }
+      })
+    }
+  }
+  
   function handleMarkerClick(location) {
-    console.log(location);
+    if(location) {
+      setCurrentLocation(location);
+      callEventsAPI(location);
+    }
   }
   const [signUpEmail, setSignUpEmail] = useState();
   const [signUpPassword, setSignUpPassword] = useState();
@@ -17,7 +40,6 @@ function App() {
   const [loginPassword, setLoginPassword] = useState();
   const [loginUsername, setLoginUsername] = useState();
   const [open, setOpen] = useState(false);
-  const [currentLocation, setCurrentLocation] = useState();
   const [isSignup, setIsSignUp] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -29,7 +51,6 @@ function App() {
     console.log(loginUsername, loginPassword);
     
   }
-  let debounceTimer = null;
   const style = {
     position: 'absolute',
     top: '50%',
@@ -41,39 +62,10 @@ function App() {
     boxShadow: 24,
     p: 4,
   };
-  function callNomatim(inputText) {
-    if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      if (inputText.length > 3) {
-        axios
-          .get(
-            `http://localhost:8000/api/search?q=${inputText}`
-          )
-          .then(({ data} ) => {
-            console.log("data",data);
-            let coords = {
-              latitude: data[0].lat,
-              longitude: data[0].lon,
-            };
-            setUserCoords(coords);
-          });
-      }
-    }, 500);
-
-  }
   
-  // const signup = ()=>{
-  //   axios.get()
-  // }
 
   useEffect(() => {
-    // axios.get('https://api.techniknews.net/ipgeo')
-    // .then(data => console.log(data))
-    // window.navigator.geolocation.getCurrentPosition((obj) => {
-    //   console.log(obj);
-    //   setUserCoords(obj.coords);
-    // }, null);
-    setUserCoords({longitude: '77.5946',latitude: '12.9716'})
+    setUserCoords({longitude: '77.5946',latitude: '12.9716'});
   }, []);
  return (
     <div className="map-wrap">
@@ -81,6 +73,10 @@ function App() {
       <SearchBar 
         setUserCoords={setUserCoords}
       ></SearchBar>
+      <EventsBlock 
+        location={currentLocation}
+        currentEvents={currentEvents}
+      ></EventsBlock>
         
         {currentLocation?(<div className="side-box">
           <div className="site-name">{currentLocation.display_name || ""}</div>
