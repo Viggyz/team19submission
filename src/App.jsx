@@ -38,12 +38,7 @@ function App() {
       callEventsAPI(location);
     }
   }
-
-  const [signUpEmail, setSignUpEmail] = useState();
-  const [signUpPassword, setSignUpPassword] = useState();
-  const [signUpUsername, setSignUpUsername] = useState();
-  const [loginPassword, setLoginPassword] = useState();
-  const [loginUsername, setLoginUsername] = useState();
+ 
   const [isSignup, setIsSignUp] = useState(false);
   
   const [openAuthModal, setOpenAuthModal] = useState(false);

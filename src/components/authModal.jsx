@@ -4,6 +4,10 @@ import axios from 'axios';
 import {Link, Modal, Paper,Box, TextField, Button, Typography} from "@mui/material";
 
 function AuthModal({openAuthModal, handleClose}) {
+    const [loginDetails, setLoginDetails] = React.useState({
+      username: "",
+      password: "",
+    });
     const [signUpDetails, setSignUpDetails] = React.useState({
         username: "",
         email: "",
@@ -49,7 +53,7 @@ function AuthModal({openAuthModal, handleClose}) {
         { isSignUp ? (
             <div className="signup-Modal">
               <Typography variant='h5' className="signup-label">SIGN UP </Typography>
-              <TextField variant = 'outlined' label = 'Email' sx={{
+              <TextField value={signUpDetails.email} variant = 'outlined' label = 'Email' sx={{
                 my: '7px', 
                 width: '75%'
               }} 
@@ -57,14 +61,14 @@ function AuthModal({openAuthModal, handleClose}) {
                   return setSignUpDetails({...signUpDetails, email: evt.target.value})
                 }} />
 
-              <TextField variant = 'outlined' label = 'Username' sx={{
+              <TextField value={signUpDetails.username} variant = 'outlined' label = 'Username' sx={{
                 my: '7px', 
                 width: '75%'
               }} 
               onChange={(evt) => {
                   return setSignUpDetails({...signUpDetails, username: evt.target.value})
                 }} />
-              <TextField variant = 'outlined' label = 'Password' type='password' sx={{
+              <TextField value={signUpDetails.password} variant = 'outlined' label = 'Password' type='password' sx={{
                 my: '7px',
                 mb: '10px', 
                 width: '75%'
@@ -83,18 +87,18 @@ function AuthModal({openAuthModal, handleClose}) {
           (
             <div className="signup-Modal">
               <Typography variant='h5' className="signup-label"> LOGIN </Typography>
-              <TextField variant = 'outlined' label = 'Username' sx={{
+              <TextField value={loginDetails.username} variant = 'outlined' label = 'Username' sx={{
                 mt: '10px',
                 my: '7px', 
                 width: '75%'
               }} 
-              onChange={(evt) => setLoginUsername(evt.target.value)} />
-              <TextField variant = 'outlined' label = 'Password' type='password' sx={{
+              onChange={(evt) => setLoginDetails({...loginDetails, username: evt.target.value})} />
+              <TextField value={loginDetails.password} variant = 'outlined' label = 'Password' type='password' sx={{
                 my: '7px',
                 mb: '10px', 
                 width: '75%'
               }} 
-              onChange={(evt) => setLoginPassword(evt.target.value)} />
+              onChange={(evt) => setLoginDetails({...loginDetails, password: evt.target.value})} />
               <div> </div>
               <Button variant='outlined' sx={{my: '10px'}} onClick={handleLogin}>Login</Button>
               <Typography variant = 'subtitle2' sx={{color: 'text.secondary'}}>Don't have an account? <Link href="#" underline='hover' onClick={() => {
