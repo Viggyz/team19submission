@@ -18,11 +18,11 @@ class Location(models.Model):
     name = models.CharField(max_length=255)
     place = models.CharField(max_length=255)
     address = models.JSONField()
-    description = models.TextField()
+    # description = models.TextField()
 
 class Event(models.Model):
     name = models.CharField(max_length=255)
-    location = models.ForeignKey('Location', on_delete=models.CASCADE)
+    location = models.ForeignKey('Location', on_delete=models.CASCADE, related_name="events")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_events')
     
     start_time = models.DateTimeField()
@@ -53,7 +53,3 @@ class Event(models.Model):
                 name="Max people for an event can only be upto 11"
             ),  
         ]
-    
-    @classmethod
-    def create(cls, idk):
-        pass

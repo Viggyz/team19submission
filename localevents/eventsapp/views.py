@@ -1,40 +1,43 @@
-from django.contrib.auth import login
+from django.contrib.auth.models import User
 
-from rest_framework.views import APIView 
-from rest_framework.response import Response 
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.exceptions import PermissionDenied, NotFound
+from rest_framework.response import Response 
+from rest_framework.views import APIView
 from rest_framework import status, permissions
-from knox.views import LoginView as KnoxLoginView
-from knox.auth import TokenAuthentication
 
 from .geoservice import GeoServiceClient
 from .serializers import (
     EventListSerializer,
+    EventInterestSerializer,
     EventSerializer,
     LocationListSerializer, 
     LocationSerializer,
     SignUpSerializer, 
 )
-from .models import Location
+from .models import Location, Event
 
 class SearchAPIView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    
     def get(self, request):
         if query := request.query_params.get('q', None):
             response_json = GeoServiceClient.autocomplete(query)
-            print(response_json)
             return Response(response_json)
         return Response({'message': 'Search term must be provided'}, status.HTTP_400_BAD_REQUEST)
 
-class LocationsAPIView(APIView):
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (permissions.IsAuthenticated,)
+class LocationListAPIView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request):
         if (longitude := request.query_params.get('lon', None)) and (latitude := request.query_params.get('lat', None)):
             response_json = GeoServiceClient.get_places(30000, longitude, latitude)
             return Response(response_json)
         return Response({'message': 'Latitude and longitude need to be passed as query params'}, status.HTTP_400_BAD_REQUEST)
         
-class LocationAPIView(APIView):
+class LocationDetailAPIView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request, osm_id):
         location = None
         try:
@@ -42,43 +45,90 @@ class LocationAPIView(APIView):
             serializer = LocationSerializer(location)
             return Response(serializer.data)
         except Location.DoesNotExist:
-            return Response({'data': {}}, status.HTTP_404_NOT_FOUND)
+            raise NotFound()
+        
+class LocationEventListAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-class LocationEventsAPIView(APIView):
     def get(self, request, osm_id):
-        qs = Location.objects.get(osm_type_id=osm_id).events.all()
-        serializer = EventListSerializer(qs, many=True)
-        return Response(serializer.data)
-
+        try:
+            qs = Location.objects.get(osm_type_id=osm_id).events.all()
+            serializer = EventListSerializer(qs, many=True)
+            return Response(serializer.data)
+        except Location.DoesNotExist:
+            raise NotFound()
 
     def post(self, request, osm_id):
-        request.data.update({
-            'location_osm_id': osm_id,
-            'created_by': request.user
-        })
-        serializer = LocationEvents(request.data)
+        request.data['created_by'] = request.user.id
+        serializer = EventSerializer(data=request.data, context = {'request': request})
         if serializer.is_valid():
             serializer.save()
 
             return Response(serializer.data, status.HTTP_201_CREATED)
-        return Response(serializer.errors)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+class EventDetailAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request, event_id):
+        try:
+            instance = Event.objects.get(pk=event_id)
+            serializer = EventSerializer(instance, context={'request': request})
+            return Response(serializer.data)
+        except Event.DoesNotExist:
+            return Response({'detail': 'Invalid event_id passed'}, status.HTTP_400_BAD_REQUEST)
             
+    def put(self, request, event_id):
+        try:
+            instance = Event.objects.get(pk=event_id)
+            serializer = EventSerializer(instance, data=request.data, context={'request': request})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors)
+        except Event.DoesNotExist:
+            return Response({'detail': 'Invalid event_id passed'}, status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, event_id):
+        try:
+            instance = Event.objects.get(pk=event_id)
+            if instance.created_by == request.user:
+                instance.delete()
+                return Response({}, status.HTTP_204_NO_CONTENT)
+            raise PermissionDenied()
+        except Event.DoesNotExist:
+            return Response({'detail': 'Invalid event_id passed'}, status.HTTP_400_BAD_REQUEST)
+
+class EventIntrestAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, event_id):
+        serializer = EventInterestSerializer(
+            data={'event_id': event_id},
+            context={'request': request},
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, event_id):
+        try:
+            instance = Event.objects.get(pk=event_id)
+            if (instance.created_by == request.user):
+                raise PermissionDenied()
+            instance.interested.remove(request.user)
+            return Response({}, status.HTTP_204_NO_CONTENT)
+        except Event.DoesNotExist:
+            return Response({'detail': 'Invalid event_id passed'}, status.HTTP_400_BAD_REQUEST)
+
 class SignUpAPIView(APIView):
+    permission_classes = (permissions.AllowAny, )
+    
     def post(self, request):
         serializer = SignUpSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             
             return Response({"message": "User successfully created"}, status.HTTP_201_CREATED)
-        return Response(serializer.errors)
-        
-class LoginView(KnoxLoginView):
-    permission_classes = (permissions.AllowAny,)
-
-    def post(self, request, format=None):
-        serializer = AuthTokenSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        return super(LoginView, self).post(request, format=None)
-
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
