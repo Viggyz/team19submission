@@ -59,7 +59,7 @@ function MapComponent({userCoords, handleMarkerClick, setIsSignUp, setIsLogin}) 
     },[userCoords])
     
     return (
-        <div className="map"  onClick={()=>{setIsSignUp(false); console.log("clicked"); setIsLogin(true)}} ref={mapContainer}>
+        <div className="map"  onClick={()=>{setIsSignUp(false); console.log("clicked"); setIsLogin(false)}} ref={mapContainer}>
         </div>
     )
 }
