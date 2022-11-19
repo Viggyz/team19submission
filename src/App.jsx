@@ -4,32 +4,13 @@ import { Paper, InputBase, TextField } from "@mui/material";
 import axios from "axios";
 
 import MapComponent from "./components/mapComponent";
+import SearchBar  from "./components/searchBar";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
-  let debounceTimer = null;
 
   function handleMarkerClick(location) {
     console.log(location);
-  }
-
-  function callNomatim(inputText) {
-    if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      if (inputText.length > 3) {
-        axios
-          .get(
-            `http://localhost:8000/api/search?q=${inputText}`
-          )
-          .then(({ data }) => {
-            let coords = {
-              latitude: data[0].lat,
-              longitude: data[0].lon,
-            };
-            setUserCoords(coords);
-          });
-      }
-    }, 500);
   }
 
   useEffect(() => {
@@ -45,7 +26,10 @@ function App() {
   return (
     <div className="map-wrap">
       <MapComponent userCoords={userCoords} handleMarkerClick={handleMarkerClick}></MapComponent>
-      <TextField
+      <SearchBar 
+        setUserCoords={setUserCoords}
+      ></SearchBar>
+      {/* <TextField
           id="filled-basic"
           placeholder="Enter a location"
           style={{
@@ -56,7 +40,7 @@ function App() {
             backgroundColor: "white",
           }}
           onChange={(evt) => callNomatim(evt.target.value)}
-        />
+        /> */}
     </div>
   );
 }
