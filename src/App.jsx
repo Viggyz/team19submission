@@ -99,7 +99,7 @@ function App() {
                 handleOpen(true);
               }}
             >
-              SIGN UP
+              Login 
             </Button>          
           </Box>
         </div>

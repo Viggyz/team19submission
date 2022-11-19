@@ -79,6 +79,7 @@ height: 30px;
   background-color: white;
   padding: 2em;
 }
+
 .signup-button{
   position: absolute;
   right: 2rem;
@@ -86,3 +87,9 @@ height: 30px;
   margin: 0.1rem;
 }
 
+.signup-Modal {
+  align-items: center;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}

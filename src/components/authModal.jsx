@@ -1,9 +1,10 @@
 import React from 'react';
+import axios from 'axios';
 
-import {Modal, Paper,Box, TextField, Button} from "@mui/material";
+import {Link, Modal, Paper,Box, TextField, Button, Typography} from "@mui/material";
 
 function AuthModal({openAuthModal, handleClose}) {
-    const {signUpDetails, setSignUpDetails} = React.useState({
+    const [signUpDetails, setSignUpDetails] = React.useState({
         username: "",
         email: "",
         password: "",
@@ -47,46 +48,59 @@ function AuthModal({openAuthModal, handleClose}) {
             >
         { isSignUp ? (
             <div className="signup-Modal">
-              <div className="sigup-label">SIGN UP</div>
-              <div className="sigup-email">Email</div>
-              <TextField onChange={(evt) => {
-                  return setSignUpDetails({...signUpDetaills, email: evt.target.value})
+              <Typography variant='h5' className="signup-label">SIGN UP </Typography>
+              <TextField variant = 'outlined' label = 'Email' sx={{
+                my: '7px', 
+                width: '75%'
+              }} 
+              onChange={(evt) => {
+                  return setSignUpDetails({...signUpDetails, email: evt.target.value})
                 }} />
-              <div> </div>
-              <div className="sigup-username">Username</div>
-              <TextField onChange={(evt) => {
+
+              <TextField variant = 'outlined' label = 'Username' sx={{
+                my: '7px', 
+                width: '75%'
+              }} 
+              onChange={(evt) => {
                   return setSignUpDetails({...signUpDetails, username: evt.target.value})
                 }} />
-              <div> </div>
-              <div className="sigup-password">Password</div>
-              <TextField onChange={(evt) => {
+              <TextField variant = 'outlined' label = 'Password' type='password' sx={{
+                my: '7px',
+                mb: '10px', 
+                width: '75%'
+              }} 
+              onChange={(evt) => {
                 return setSignUpDetails({...signUpDetails, password: evt.target.value})
             }} />
-              <div></div>
-              <Button onClick={handleSignUp}>SIGN UP</Button>
-              <div>Already Signed In?</div>
-              <Button
-                onClick={() => {
+              <Button variant='outlined' sx={{my: '10px'}} onClick={handleSignUp}>SIGN UP</Button>
+              <Typography variant = 'subtitle2' sx={{color: 'text.secondary'}}>Already Signed In? <Link href="#" underline='hover' onClick={() => {
                     return setIsSignUp(0);
-                }}
-              >
-                Login
-              </Button>
+                }}>
+                  Login</Link></Typography>
             </div>
           )
           :
           (
-              <div className="signup-Modal">
-          <div className="sigup-label">LOGIN</div>
-          <div className="sigup-email">Username</div>
-          <TextField onChange={(evt) => setLoginUsername(evt.target.value)} />
-          <div> </div>
-          <div className="sigup-username">Password</div>
-          <TextField onChange={(evt) => setLoginPassword(evt.target.value)} />
-          <div> </div>
-          <Button onClick={handleLogin}>Login</Button>
-          <div>Don't have an account?</div> 
-          <Button onClick={()=>{return setIsSignUp(1)}}>Sign Up</Button>          
+            <div className="signup-Modal">
+              <Typography variant='h5' className="signup-label"> LOGIN </Typography>
+              <TextField variant = 'outlined' label = 'Username' sx={{
+                mt: '10px',
+                my: '7px', 
+                width: '75%'
+              }} 
+              onChange={(evt) => setLoginUsername(evt.target.value)} />
+              <TextField variant = 'outlined' label = 'Password' type='password' sx={{
+                my: '7px',
+                mb: '10px', 
+                width: '75%'
+              }} 
+              onChange={(evt) => setLoginPassword(evt.target.value)} />
+              <div> </div>
+              <Button variant='outlined' sx={{my: '10px'}} onClick={handleLogin}>Login</Button>
+              <Typography variant = 'subtitle2' sx={{color: 'text.secondary'}}>Don't have an account? <Link href="#" underline='hover' onClick={() => {
+                    return setIsSignUp(1);
+                }}>
+                  Sign Up</Link></Typography>          
         </div>)
         }
         </Paper>
