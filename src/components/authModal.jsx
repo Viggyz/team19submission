@@ -8,7 +8,7 @@ function AuthModal({openAuthModal, handleClose}) {
         email: "",
         password: "",
     })
-    const {isSignUp, setIsSignUp} = React.useState(false);
+    const [isSignUp, setIsSignUp] = React.useState(0);
 
     const handleSignUp = () => {
         axios.post("http://localhost:8000/api/auth/signup",signUpDetails)
@@ -67,7 +67,7 @@ function AuthModal({openAuthModal, handleClose}) {
               <div>Already Signed In?</div>
               <Button
                 onClick={() => {
-                    return setIsSignUp(false);
+                    return setIsSignUp(0);
                 }}
               >
                 Login
@@ -86,7 +86,7 @@ function AuthModal({openAuthModal, handleClose}) {
           <div> </div>
           <Button onClick={handleLogin}>Login</Button>
           <div>Don't have an account?</div> 
-          <Button onClick={()=>{return setIsSignUp(true)}}>Sign Up</Button>          
+          <Button onClick={()=>{return setIsSignUp(1)}}>Sign Up</Button>          
         </div>)
         }
         </Paper>
