@@ -1,17 +1,17 @@
 import { useEffect, useState, useRef } from "react";
 import "./App.css";
-import maplibregl, { Marker } from "maplibre-gl";
 import { Paper, InputBase, TextField } from "@mui/material";
-import { getLocations } from "./services/locations";
 import axios from "axios";
 
-import { renderToStaticMarkup } from "react-dom/server";
+import MapComponent from "./components/mapComponent";
+
 function App() {
-  const mapContainer = useRef(null);
-  const [locations, setLocations] = useState([]);
-  const [currentMap, setCurrentMap] = useState();
   const [userCoords, setUserCoords] = useState();
   let debounceTimer = null;
+
+  function handleMarkerClick(location) {
+    console.log(location);
+  }
 
   function callNomatim(inputText) {
     if (debounceTimer) clearTimeout(debounceTimer);
@@ -19,7 +19,7 @@ function App() {
       if (inputText.length > 3) {
         axios
           .get(
-            `https://nominatim.openstreetmap.org/?city=${inputText}&format=json&limit=1`
+            `http://localhost:8000/api/search?q=${inputText}`
           )
           .then(({ data }) => {
             let coords = {
@@ -35,57 +35,17 @@ function App() {
   useEffect(() => {
     // axios.get('https://api.techniknews.net/ipgeo')
     // .then(data => console.log(data))
-    window.navigator.geolocation.getCurrentPosition((obj) => {
-      console.log(obj);
-      setUserCoords(obj.coords);
-    }, null);
+    // window.navigator.geolocation.getCurrentPosition((obj) => {
+    //   console.log(obj);
+    //   setUserCoords(obj.coords);
+    // }, null);
+    setUserCoords({longitude: '77.5946',latitude: '12.9716'})
   }, []);
-  useEffect(() => {
-    console.log(userCoords, "changed");
-    if (userCoords) {
-      const map = new maplibregl.Map({
-        container: mapContainer.current,
-        style:
-          "https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL", // stylesheet location
-        center: [userCoords.longitude, userCoords.latitude], // starting position [lng, lat]
-        zoom: 10, // starting zoom
-      });
-      setCurrentMap(map);
-
-      getLocations(userCoords.longitude, userCoords.latitude).then(
-        (response) => {
-          setLocations(response.data);
-        }
-      );
-    }
-  }, [userCoords]);
-  useEffect(() => {
-    locations.map((location) => {
-      const element = document.createElement("div");
-      element.id = "marker";
-      // const jsele
-      const jsele = (
-        <div className="marker_container">
-          <div className="marker-text">9/10</div>
-          <div className="marker-icon"></div>
-        </div>
-      );
-      //<Room/>
-      // console.log([location.point.lon,location.point.lat]);
-      // element.innerHTML="<div>9/19<div>"
-      element.onclick = () => {
-        console.log(location);
-      };
-      element.innerHTML = renderToStaticMarkup(jsele);
-      return new Marker(element)
-        .setLngLat([location.point.lon, location.point.lat])
-        .addTo(currentMap);
-    });
-  }, [locations]);
+  
   return (
     <div className="map-wrap">
-      <div className="map" ref={mapContainer}>
-        <TextField
+      <MapComponent userCoords={userCoords} handleMarkerClick={handleMarkerClick}></MapComponent>
+      <TextField
           id="filled-basic"
           placeholder="Enter a location"
           style={{
@@ -97,8 +57,6 @@ function App() {
           }}
           onChange={(evt) => callNomatim(evt.target.value)}
         />
-        <div>Des</div>
-      </div>
     </div>
   );
 }
