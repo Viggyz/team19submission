@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+
 import axios from "axios";
+import {Button, TextField, Box} from "@mui/material"
 
 import { encode_location_id } from "./utils";
 
@@ -78,13 +80,6 @@ function App() {
         currentEvents={currentEvents}
       ></EventsBlock>
         
-        {currentLocation?(<div className="side-box">
-          <div className="site-name">{currentLocation.display_name || ""}</div>
-          <div className="event-list">
-            <div>event 1</div>
-            <div>event 2</div>
-          </div>     
-        </div>):null}
         {isSignup===true?(<div className="signup-box">
           <div className = "sigup-label">SIGN UP</div>
           <div className = "sigup-email">Email</div>
@@ -113,8 +108,17 @@ function App() {
           <Button onClick={()=>{setIsSignUp(true); setIsLogin(false)}}>Sign Up</Button>          
         </div>):null}
         <div className="signup-button">
-        <Button type="out" onClick={()=>setIsSignUp(true)}>SIGN UP</Button>          
-          
+          <Box>
+            <Button 
+              variant="contained"
+              size="small"
+              color="info"
+              type="out"
+              onClick={()=>setIsSignUp(true)}
+            >
+              SIGN UP
+            </Button>          
+          </Box>
         </div>
         
         

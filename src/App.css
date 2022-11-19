@@ -63,7 +63,7 @@ height: 30px;
 .signup-box{
   z-index: 30;
   position: absolute;
-  left: 0; 
+  left: 0;
   right: 0; 
   top: 0;
   bottom: 0;
@@ -81,6 +81,7 @@ height: 30px;
 }
 .signup-button{
   position: absolute;
-  right: 1em;
-  top: 1em;
+  right: 2rem;
+  top: 0;
+  margin: 0.1rem;
 }

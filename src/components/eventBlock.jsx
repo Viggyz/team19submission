@@ -9,8 +9,8 @@ function EventsBlock({location, currentEvents}) {
             zIndex: 1, 
             position: 'absolute', 
             right: "1rem", 
-            bottom: '2rem',
-            width: '25vw',
+            bottom: '1.5rem',
+            minWidth: '250px',
         }}
         elevation={3}
         >
@@ -18,12 +18,14 @@ function EventsBlock({location, currentEvents}) {
                 sx={{ 
                     height: '85vh',
                     padding: '1rem', 
-                    // minWidth: '300px'
+                    width: '20vw',
+                    minWidth: '250px',
+                    marginRight: '1rem',
                 }}
             >
                 {
                     location &&
-                    <Box>
+                    <Box sx={{height: '100%', width: '100%'}}>
                         <Typography variant='h5'>{location.name}</Typography>
                         <Typography variant='subtitle1'>{location.address.road || ""}</Typography>
                         <Divider />
