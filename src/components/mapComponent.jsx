@@ -49,7 +49,8 @@ function MapComponent({userCoords, handleMarkerClick, setIsSignUp, setIsLogin}) 
     useEffect(() => {
         if (userCoords) {
             map.current.flyTo({
-                center: [userCoords.longitude, userCoords.latitude]
+                center: [userCoords.longitude, userCoords.latitude],
+                zoom: 14,
             })
             getLocations(userCoords.longitude, userCoords.latitude).then(
                 (response) => {
