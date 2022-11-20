@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-import { Button, Box, Snackbar, Alert } from "@mui/material";
+import { Button, Box, Snackbar, Alert, Typography } from "@mui/material";
 
 import MapComponent from "./components/mapComponent";
 import SearchBar  from "./components/searchBar";
@@ -112,21 +112,28 @@ function App() {
 
       </AuthModal>
       
+      {localStorage.getItem("access") ?
+      
         <div className="signup-button">
-          <Box>
-            <Button 
-              variant="contained"
-              size="small"
-              color="info"
-              type="out"
-              onClick={() => {
-                handleOpen(true);
-              }}
-            >
-              Login 
-            </Button>          
-          </Box>
-        </div>
+            <Typography sx = {{backgroundColor:'white'}}> Logged In.</Typography>
+          </div>
+      : 
+          <div className="signup-button">
+            <Box>
+              <Button 
+                variant="contained"
+                size="small"
+                color="info"
+                type="out"
+                onClick={() => {
+                  handleOpen(true);
+                }}
+              >
+                Login 
+              </Button>          
+            </Box>
+          </div>
+      }
     </div>
   );
 }

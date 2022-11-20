@@ -67,7 +67,7 @@ export class Auth {
         username,
         password,
       })
-        .then(({ access, refresh }) => {
+        .then(({data : { access, refresh }}) => {
           localStorage.setItem("access", access);
           localStorage.setItem("refresh", refresh);
           AuthClient.defaults.headers["Authorization"] = access;
