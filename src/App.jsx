@@ -27,9 +27,18 @@ function App() {
   })
   const [openAuthModal, setOpenAuthModal] = useState(false);
   
-  const handleEventOpen = () => setOpenEventModal(true);
-  const handleEventClose = () => setOpenEventModal(false);
- 
+  const handleEventOpen = () => {
+    if (isUserLoggedIn) {
+      setOpenEventModal(true);
+    }
+    else {
+      setOpenAuthModal(true);
+    }
+  };
+  const handleEventClose = () => {
+    handleMarkerClick(currentLocation);
+    setOpenEventModal(false);
+  };
   const handleAuthOpen = () => setOpenAuthModal(true);
   const handleAuthClose = () => setOpenAuthModal(false);
   const handleSnackbarClose = (event, reason) => {
@@ -49,7 +58,7 @@ function App() {
       setCurrentLocation(location);
       if(location) {
         Locations.events(location)
-        .then(data => {
+        .then(({data}) => {
           return setCurrentEvents(data);
         })
         .catch((error) => {

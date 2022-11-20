@@ -12,13 +12,13 @@ const Client = axios.create({
 const AuthClient = axios.create({
   baseURL: BASE_URL,
   timeout: 2000,
-  headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+  headers: { 'Authorization': `Bearer ${localStorage.getItem("access")}` },
 });
 
 AuthClient.interceptors.request.use(function (config) {
   if (window.localStorage.getItem("access")) {
     config.headers['Authorization'] = `Bearer ${window.localStorage.getItem("access")}`;
-    return Promise.resolve(config);
+    return config;
   }
   return Promise.reject(config);
 }, function (error) {
@@ -28,19 +28,23 @@ AuthClient.interceptors.request.use(function (config) {
 
 AuthClient.interceptors.response.use(
   function (response) {
-    return Promise.resolve(response);
+    return response;
   },
   function (error) {
-    if (error.status === 401) {
-      Auth.refreshToken()
-        .then(() => {
-          AuthClient.request(error.config) 
-            .then((response) => Promise.resolve(response))
-            .catch((err) => Promise.reject(err));
-        })
-        .catch((err) => Promise.reject(err));
+    if (error.response.status === 401) {
+      return new Promise((resolve, reject) => {
+        Auth.refreshToken()
+          .then((access) => {
+            Client.request({...error.config, 
+              headers: {...error.config.headers, 'Authorization': `Bearer ${access}`}
+            }) 
+              .then((response) => resolve(response))
+              .catch((err) => reject(err));
+          })
+          .catch((err) => reject(err));
+      })
     } else {
-      Promise.reject(error);
+      return Promise.reject(error);
     }
   }
 );
@@ -92,7 +96,7 @@ export class Auth {
         Client.post("auth/refresh_token", {
           refresh: localStorage.getItem("refresh"),
         })
-          .then(({ access }) => {
+          .then(({data: { access }}) => {
             localStorage.setItem("access", access);
             AuthClient.defaults.headers["Authorization"] = access;
             resolve(access);
@@ -139,7 +143,7 @@ export class Locations {
         return Client.get(`locations/${location_id}/events`)
     }
 
-    static createEvent(location, payload) {
+    static  createEvent(location, payload) {
         const location_id = encodeLocationId(location);
         return AuthClient.post(`locations/${location_id}/events`, {
             ...payload,
@@ -149,7 +153,7 @@ export class Locations {
                 place: location.display_name,
                 address: location.address,
             }
-        })
+          })
     }
 }
 

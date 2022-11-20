@@ -87,6 +87,10 @@ height: 30px;
   margin: 0.1rem;
 }
 
+.parent > * {
+  margin: 0.5rem 0 !important;
+}
+
 /* .eventform{
   z-index: 30;
   position: absolute;
@@ -115,7 +119,7 @@ height: 30px;
 }
 
 .event-textfield{
-  width: 55%;
+  width: 75%;
   margin-top: 1em;
 }
 

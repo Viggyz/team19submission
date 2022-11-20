@@ -5,37 +5,7 @@ import {AddCircleOutlined, AddOutlined} from "@mui/icons-material"
 
 import { Events } from "../api.service";
 
-let event_objs = [
-    {
-        "id": 1,
-        "name": "Juniors League",
-        "start_time": "2022-11-24T17:57:32.281000Z",
-        "end_time": "2022-11-24T19:57:32.281000Z",
-        "description": "Chess tournament",
-        "max_people": 5,
-        "current_people": 0
-    },
-    {
-        "id": 3,
-        "name": "Juniors League 3",
-        "start_time": "2022-11-24T17:57:32.281000Z",
-        "end_time": "2022-11-24T19:57:32.281000Z",
-        "description": "Cards tournament",
-        "max_people": 6,
-        "current_people": 0
-    },
-    {
-        "id": 4,
-        "name": "Champions League",
-        "start_time": "2022-11-27T17:57:32.281000Z",
-        "end_time": "2022-11-29T19:57:32.281000Z",
-        "description": "Football tournament",
-        "max_people": 4,
-        "current_people": 0
-    }
-]
-
-function EventsBlock({location, currentEvents, handleEventOpen, setsnackbarState}) {
+function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, isUserLoggedIn}) {
     return (
         <Box id='events-block' sx={{
             zIndex: 1, 
@@ -65,7 +35,7 @@ function EventsBlock({location, currentEvents, handleEventOpen, setsnackbarState
                         <Divider />
                         <List>
                             {
-                                event_objs.map(event => {
+                                currentEvents && currentEvents.map(event => {
                                     return (
                                         <ListItem key={event.id}>
                                             <ListItemText
