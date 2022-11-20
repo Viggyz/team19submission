@@ -16,7 +16,10 @@ function EventForm({ location, setsnackbarState }) {
     setCurrentLocation(location);
   }, [location]);
 
+
+
   const handleClick = ()=>{
+    console.log(currentLocation);
     Locations.createEvent(currentLocation, {"name":eventName, "start_time": startTime, "end_time": endTime, "description": description, "max_people": max_people})
     .then(()=>{setsnackbarState({open: true, message: "Event Successfully Created!", severity: "success"})})
     .catch((err)=>{setsnackbarState({open: true, message: err, severity: "error"})})
