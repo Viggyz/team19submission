@@ -162,6 +162,10 @@ export class Events {
     return AuthClient.delete(`events/${event_id}/interested`);
   }
 
+  static getMyEvents() {
+    return AuthClient.get('events/created');
+  }
+
   static get(event_id) {
     return Client.get(`events/${event_id}`);
   }
