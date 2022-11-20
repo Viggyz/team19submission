@@ -1,3 +1,5 @@
+from requests import HTTPError
+
 from django.contrib.auth.models import User
 
 from rest_framework.authtoken.serializers import AuthTokenSerializer
@@ -22,8 +24,16 @@ class SearchAPIView(APIView):
     
     def get(self, request):
         if query := request.query_params.get('q', None):
-            response_json = GeoServiceClient.autocomplete(query)
-            return Response(response_json)
+            try: 
+                response_json = GeoServiceClient.autocomplete(query)
+                return Response(response_json)
+            except HTTPError as HE:
+                if (HE.response.status_code == 404):
+                    return Response([])
+                elif HE.response.status_code == 429 and HE.response.reason == "Rate Limited Day":
+                    return Response({'details': 'Try again in 24 hours'}, status.HTTP_503_SERVICE_UNAVAILABLE)
+                elif HE.response.status_code == 429:
+                    return Response({'details': 'Try again in a few seconds'}, status.HTTP_429_TOO_MANY_REQUESTS)
         return Response({'message': 'Search term must be provided'}, status.HTTP_400_BAD_REQUEST)
 
 class LocationListAPIView(APIView):
@@ -31,8 +41,16 @@ class LocationListAPIView(APIView):
 
     def get(self, request):
         if (longitude := request.query_params.get('lon', None)) and (latitude := request.query_params.get('lat', None)):
-            response_json = GeoServiceClient.get_places(30000, longitude, latitude)
-            return Response(response_json)
+            try:
+                response_json = GeoServiceClient.get_places(30000, longitude, latitude)
+                return Response(response_json)
+            except HTTPError as HE:
+                if (HE.response.status_code == 404):
+                    return Response([])
+                elif HE.response.status_code == 429 and HE.response.reason == "Rate Limited Day":
+                    return Response({'details': 'Try again in 24 hours'}, status.HTTP_503_SERVICE_UNAVAILABLE)
+                elif HE.response.status_code == 429:
+                    return Response({'details': 'Try again in a few seconds'}, status.HTTP_429_TOO_MANY_REQUESTS)
         return Response({'message': 'Latitude and longitude need to be passed as query params'}, status.HTTP_400_BAD_REQUEST)
         
 class LocationDetailAPIView(APIView):
@@ -56,7 +74,7 @@ class LocationEventListAPIView(APIView):
             serializer = EventListSerializer(qs, many=True)
             return Response(serializer.data)
         except Location.DoesNotExist:
-            raise NotFound()
+            return Response([], status.HTTP_200_OK)
 
     def post(self, request, osm_id):
         request.data['created_by'] = request.user.id

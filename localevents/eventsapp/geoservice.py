@@ -22,6 +22,7 @@ class GeoServiceClient:
             'key': config('GEOSERVICE_APIKEY'),
         })
         response = requests.get(url, params=query_params, headers={'accept': 'application/json'})
+        response.raise_for_status()
         return response.json()
     
     @staticmethod

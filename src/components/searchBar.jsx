@@ -1,42 +1,27 @@
 import React from "react";
 
-import { TextField, Autocomplete, Grid, Typography } from "@mui/material";
-import axios from "axios";
+import {Paper, TextField, Autocomplete, Grid, Typography } from "@mui/material";
+
+import {searchPlaces} from "../api.service";
+
+import {debouncedAPICall} from "../utils";
 
 function SearchBar({ setUserCoords}) {
   const [value, setValue] = React.useState(null);
   const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
-  const loaded = React.useRef(false);
 
-  const debounce = (func) => {
-    let  timer;
-    return function (...args) {
-        const context = this;
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-            timer = null;
-            func.apply(context, args);
-        }, 600);
-    };
-  };
-  
   function callSearchAPI(inputText) {
       if (inputText.length > 3) {
-        inputText = new URLSearchParams(inputText);
-        axios
-          .get(
-            `http://localhost:8000/api/search?q=${inputText}`
-          )
-          .then(({ data }) => {
-            // handle its a bad request
-            setOptions(data);
-            // setUserCoords(coords);
-          });
+        searchPlaces(inputText)
+        .then(({ data }) => {
+          // handle its a bad request
+          setOptions(data);
+        });
       }
     }
 
-  const debouncedCallSearchAPI = React.useCallback(debounce(callSearchAPI), []);
+  const debouncedCallSearchAPI = React.useCallback(debouncedAPICall(callSearchAPI), []);
 
   return (
     <div id="search-bar">
@@ -66,12 +51,16 @@ function SearchBar({ setUserCoords}) {
             }
         }}
         renderInput={(params) => (
-            <TextField 
+            <Paper elevation={5} sx = {{
+              minWidth: '500px'
+            }}>
+              <TextField 
                 {...params} 
                 sx={{margin: '1rem', backgroundColor: 'white' }} 
                 label="Add a location" 
                 InputLabelProps={{ disabled: true}}
             />
+            </Paper>
         )}
         renderOption={(props, option) => {
             return (

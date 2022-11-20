@@ -1,156 +1,152 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-import { encode_location_id } from "./utils";
+import { Button, Box, Paper, Snackbar, Alert, Typography } from "@mui/material";
 
 import MapComponent from "./components/mapComponent";
-import { Button, TextField, Typography, Modal, Box } from "@mui/material";
-import axios from "axios";
 import SearchBar  from "./components/searchBar";
 import EventsBlock from "./components/eventBlock";
 import EventForm from "./components/EventForm";
+
+import AuthModal from "./components/authModal";
+import AddEventForm from "./components/addEventForm"
+import { Locations } from "./api.service";
+import { FormatColorResetTwoTone } from "@mui/icons-material";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
   const [currentLocation, setCurrentLocation] = useState(null);
   const [currentEvents, setCurrentEvents] = useState(null);
-
-  function callEventsAPI(location) {
-    if(location) {
-      let osm_type_id = encode_location_id(location);
-      axios.get(`http://localhost:8000/api/locations/${osm_type_id}/events`)
-      .then(data => {
-        return setCurrentEvents(data);
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          setCurrentEvents([])
-        }
-      })
-    }
-  }
+  const [openEventModal, setOpenEventModal] = useState(false)
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(localStorage.getItem("access")?true:false);
+  const [snackbarState, setsnackbarState] = useState({
+    open: false,
+    message: "",
+    severity: "success"
+  })
+  const [openAuthModal, setOpenAuthModal] = useState(false);
   
+  const handleEventOpen = () => setOpenEventModal(true);
+  const handleEventClose = () => setOpenEventModal(false);
+  const handleOpen = () => setOpenAuthModal(true);
+  const handleClose = () => setOpenAuthModal(false);
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setsnackbarState({
+      ...snackbarState,
+      open:false
+    });
+  };
+
+
   function handleMarkerClick(location) {
     if(location) {
       setCurrentLocation(location);
-      callEventsAPI(location);
+      if(location) {
+        Locations.events(location)
+        .then(data => {
+          return setCurrentEvents(data);
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            setCurrentEvents([])
+          }
+        })
+      }
     }
   }
-  const [signUpEmail, setSignUpEmail] = useState();
-  const [signUpPassword, setSignUpPassword] = useState();
-  const [signUpUsername, setSignUpUsername] = useState();
-  const [loginPassword, setLoginPassword] = useState();
-  const [loginUsername, setLoginUsername] = useState();
-  const [open, setOpen] = useState(false);
-  const [isSignup, setIsSignUp] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [isLogin, setIsLogin] = useState(false);
-  const handleSignUp = () => {
-    console.log(signUpEmail, signUpPassword);
-    axios.post("http://localhost:8000/api/auth/signup",
-      {
-        "username": signUpUsername,
-        "email": signUpEmail,
-        "password": signUpPassword,
-    }
-    ).then((response)=>{console.log(response)});
-  };
-  const handleLogin = () => {
-    console.log(loginUsername, loginPassword);
-    axios.post("http://localhost:8000/api/auth/login",
-    {
-      "username": loginUsername,
-      "password": loginPassword,
+ 
+  function removeTokens() {
+    window.localStorage.removeItem("access");
+    window.localStorage.removeItem("refresh");
+    setIsUserLoggedIn(false);
   }
-  ).then(({data})=>{window.localStorage.setItem("access", data.access);window.localStorage.setItem("refresh", data.refresh);});
-
-  };
-  let debounceTimer = null;
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
   
-
   useEffect(() => {
     setUserCoords({longitude: '77.5946',latitude: '12.9716'});
+    window.addEventListener('addTokens', () => {
+      setIsUserLoggedIn(true);
+    });
+    window.addEventListener('removeTokens', () => {
+      setIsUserLoggedIn(false);
+    });
+    return () => {
+      window.removeEventListener('addTokens', () => setIsUserLoggedIn(true));
+      window.removeEventListener('removeTokens', () => setIsUserLoggedIn(false));
+    }
   }, []);
+
+
   return (
     <div className="map-wrap">
+      <Snackbar 
+        sx={{zIndex: '10'}}
+        open={snackbarState.open}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        // message={snackbarState.message}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarState.severity} sx={{ width: '100%' }}>
+          {snackbarState.message}
+        </Alert>
+      </Snackbar>
       <MapComponent
         userCoords={userCoords}
-        setIsSignUp={setIsSignUp}
-        setIsLogin={setIsLogin}
         handleMarkerClick={handleMarkerClick}
       ></MapComponent>
       <SearchBar setUserCoords={setUserCoords}></SearchBar>
       <EventsBlock 
         location={currentLocation}
         currentEvents={currentEvents}
+        handleEventOpen={handleEventOpen}
       ></EventsBlock>
-      <EventForm location={currentLocation}/>
-      {isSignup === true ? (
-        <div className="signup-box">
-          <div className="sigup-label">SIGN UP</div>
-          <div className="sigup-email">Email</div>
-          <TextField onChange={(evt) => setSignUpEmail(evt.target.value)} />
-          <div> </div>
-          <div className="sigup-username">Username</div>
-          <TextField onChange={(evt) => setSignUpUsername(evt.target.value)} />
-          <div> </div>
-          <div className="sigup-password">Password</div>
-          <TextField onChange={(evt) => setSignUpPassword(evt.target.value)} />
-          <div></div>
-          <Button onClick={handleSignUp}>SIGN UP</Button>
-          <div>Already Signed In?</div>
-          <Button
-            onClick={() => {
-              setIsSignUp(false);
-              setIsLogin(true);
-            }}
-          >
-            Login
-          </Button>
-        </div>
-      ) : null}
-      {isLogin === true ? (
-        <div className="signup-box">
-          <div className="sigup-label">LOGIN</div>
-          <div className="sigup-email">Username</div>
-          <TextField onChange={(evt) => setLoginUsername(evt.target.value)} />
-          <div> </div>
-          <div className="sigup-username">Password</div>
-          <TextField onChange={(evt) => setLoginPassword(evt.target.value)} />
-          <div> </div>
-          <Button onClick={handleSignUp}>Login</Button>
-          <div>Don't have an account?</div> 
-          <Button onClick={()=>{setIsSignUp(true); setIsLogin(false)}}>Sign Up</Button>          
-        </div>):null}
-        <div className="signup-button">
-          <Box>
+      <AddEventForm
+      openEventModal={openEventModal}
+      handleEventClose={handleEventClose}
+      currentLocation={currentLocation}
+      setsnackbarState={setsnackbarState}
+      >
+
+      </AddEventForm>
+      <AuthModal
+        handleClose={handleClose}
+        openAuthModal={openAuthModal}
+        setsnackbarState={setsnackbarState}
+      >
+
+      </AuthModal>
+      
+      { isUserLoggedIn ?
+        <Box id="logged-in-bar" sx={{position: 'absolute', top: 0, right: '1rem'  }}>
+          <Paper sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', px: 1}}>
+            {/* <Typography>Logged In</Typography> */}
             <Button 
-              variant="contained"
-              size="small"
-              color="info"
-              type="out"
-              onClick={() => {
-                setIsSignUp(true);
-                setIsLogin(false);
-  
-              }}
-            >
-              SIGN UP
-            </Button>          
-          </Box>
-        </div>
+              size="small" 
+              color="error"
+              onClick={removeTokens}
+              // sx={{mx: 1}}
+            >Log out</Button>
+          </Paper>
+        </Box>
+      : 
+            <Box id="log-in-button" sx={{position: 'absolute', top: 0, right: '1rem'  }}>
+              <Button 
+                variant="contained"
+                size="small"
+                color="success"
+                type="out"
+                onClick={() => {
+                  handleOpen(true);
+                }}
+              >
+                Login 
+              </Button>          
+            </Box>
+      }
     </div>
   );
 }

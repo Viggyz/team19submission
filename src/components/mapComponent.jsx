@@ -1,13 +1,11 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import {useRef, useState, useEffect} from "react"
-
+import { Locations } from "../api.service";
 import maplibregl, { Marker } from "maplibre-gl";
 
-import { getLocations } from "../services/locations";
 
 
-
-function MapComponent({userCoords, handleMarkerClick, setIsSignUp, setIsLogin}) {
+function MapComponent({userCoords, handleMarkerClick}) {
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [locations, setLocations] = useState([]);
@@ -52,7 +50,7 @@ function MapComponent({userCoords, handleMarkerClick, setIsSignUp, setIsLogin}) 
                 center: [userCoords.longitude, userCoords.latitude],
                 zoom: 14,
             })
-            getLocations(userCoords.longitude, userCoords.latitude).then(
+            Locations.list(userCoords.longitude, userCoords.latitude).then(
                 (response) => {
                 addMarkers(response.data);
             });
@@ -60,7 +58,7 @@ function MapComponent({userCoords, handleMarkerClick, setIsSignUp, setIsLogin}) 
     },[userCoords])
     
     return (
-        <div className="map"  onClick={()=>{setIsSignUp(false); console.log("clicked"); setIsLogin(false)}} ref={mapContainer}>
+        <div className="map"  ref={mapContainer}>
         </div>
     )
 }
