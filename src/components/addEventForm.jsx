@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link, Modal, Paper,Box, TextField, Button, Typography} from "@mui/material";
 
-function AddEventForm(openEventModal, handleEventClose) {
+function AddEventForm({openEventModal, handleEventClose}) {
 
   
     // <Modal
