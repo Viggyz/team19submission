@@ -41,7 +41,7 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                         <Divider />
                         <List>
                             {
-                                currentEvents && currentEvents.map(event => {
+                                currentEvents && currentEvents.length ? currentEvents.map(event => {
                                     return (
                                         <ListItem key={event.id}>
                                             <ListItemText
@@ -61,6 +61,10 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                                         </ListItem>
                                         )
                                     })
+                                    :
+                                    (
+                                        <Typography variant="body2" sx={{color: 'text.secondary', textAlign: 'center', mt: 2, mx: 2}}>Click "Add Event" to create a new event here!</Typography>
+                                    )
                             }
                         </List>
                     </Box>
