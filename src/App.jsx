@@ -104,6 +104,7 @@ function App() {
         location={currentLocation}
         currentEvents={currentEvents}
         handleEventOpen={handleEventOpen}
+        setsnackbarState={setsnackbarState}
       />
       <AddEventForm
       openEventModal={openEventModal}

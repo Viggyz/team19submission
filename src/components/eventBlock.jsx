@@ -35,7 +35,7 @@ let event_objs = [
     }
 ]
 
-function EventsBlock({location, currentEvents, handleEventOpen}) {
+function EventsBlock({location, currentEvents, handleEventOpen, setsnackbarState}) {
     return (
         <Box id='events-block' sx={{
             zIndex: 1, 
