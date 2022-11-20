@@ -1,9 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import {useRef, useState, useEffect} from "react"
-
-import maplibregl, { Marker } from "maplibre-gl";
-
 import { Locations } from "../api.service";
+import maplibregl, { Marker } from "maplibre-gl";
 
 
 

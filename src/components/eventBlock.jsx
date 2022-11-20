@@ -1,9 +1,9 @@
 import React from 'react';
 
-import axios from 'axios';
 import {IconButton, Box, Paper, Divider, Typography, List, ListItem, ListItemText, Button} from '@mui/material';
 import {AddCircleOutlined, AddOutlined} from "@mui/icons-material"
 
+import { Events } from "../api.service";
 
 let event_objs = [
     {
@@ -35,7 +35,7 @@ let event_objs = [
     }
 ]
 
-function EventsBlock({location, currentEvents, handleEventOpen}) {
+function EventsBlock({location, currentEvents, handleEventOpen, setsnackbarState}) {
     return (
         <Box id='events-block' sx={{
             zIndex: 1, 
@@ -72,7 +72,16 @@ function EventsBlock({location, currentEvents, handleEventOpen}) {
                                                 primary={event.name}
                                                 secondary={event.description}
                                             />
-                                            <IconButton sx ={{size: 'small'}}> <AddCircleOutlined/> </IconButton>                                            
+                                            <IconButton 
+                                                sx ={{size: 'small'}}
+                                                onClick={() => {
+                                                    Events.addIntrest(event.id)
+                                                    .then(()=>{
+                                                        setsnackbarState({open: true, message: "Successfully Showed interest", severity: "success"})
+                                                    })
+                                                    .catch(()=>{setsnackbarState({open: true, message: "Already Showed interest", severity: "error"})})
+                                                }}
+                                            > <AddCircleOutlined/> </IconButton>                                            
                                         </ListItem>
                                         )
                                     })

@@ -6,6 +6,8 @@ import { Button, Box, Paper, Snackbar, Alert, Typography } from "@mui/material";
 import MapComponent from "./components/mapComponent";
 import SearchBar  from "./components/searchBar";
 import EventsBlock from "./components/eventBlock";
+import EventForm from "./components/EventForm";
+
 import AuthModal from "./components/authModal";
 import AddEventForm from "./components/addEventForm"
 import UserStatusBar from "./components/userStatusbar"; 
@@ -103,11 +105,16 @@ function App() {
         location={currentLocation}
         currentEvents={currentEvents}
         handleEventOpen={handleEventOpen}
+        setsnackbarState={setsnackbarState}
       />
       <AddEventForm
       openEventModal={openEventModal}
       handleEventClose={handleEventClose}
-      />
+      currentLocation={currentLocation}
+      setsnackbarState={setsnackbarState}
+      >
+
+      </AddEventForm>
       <AuthModal
         handleAuthClose={handleAuthClose}
         openAuthModal={openAuthModal}

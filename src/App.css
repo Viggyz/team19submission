@@ -87,9 +87,36 @@ height: 30px;
   margin: 0.1rem;
 }
 
+/* .eventform{
+  z-index: 30;
+  position: absolute;
+  left: 0;
+  right: 0; 
+  top: 0;
+  bottom: 0;
+  height: fit-content;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto; 
+  margin-right: auto; 
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  padding: 2em;
+} */
+
 .signup-Modal {
   align-items: center;
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
 }
+
+.event-textfield{
+  width: 55%;
+  margin-top: 1em;
+}
+
+

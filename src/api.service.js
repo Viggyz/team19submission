@@ -11,7 +11,7 @@ const Client = axios.create({
 
 const AuthClient = axios.create({
   baseURL: BASE_URL,
-  timeout: 1000,
+  timeout: 2000,
   headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
 });
 
@@ -146,7 +146,7 @@ export class Locations {
             location: {
                 osm_type_id: location_id,
                 name: location.name,
-                place: location.place,
+                place: location.display_name,
                 address: location.address,
             }
         })

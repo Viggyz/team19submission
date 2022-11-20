@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Link, Modal, Paper,Box, TextField, Button, Typography} from "@mui/material";
-
-function AddEventForm({openEventModal, handleEventClose}) {
-    <Modal
+import EventForm from './EventForm';
+function AddEventForm({openEventModal, handleEventClose, currentLocation, setsnackbarState}) {
+    return (
+      <Modal
     open={openEventModal}
     onClose={handleEventClose}>
       <Box>
@@ -19,10 +20,13 @@ function AddEventForm({openEventModal, handleEventClose}) {
                 padding: '1rem',
             }}
         >
+        <EventForm location={currentLocation} setsnackbarState={setsnackbarState}/> 
           
         </Paper>
       </Box>
     </Modal>
-}
+    
+    )
+          }
 
 export default AddEventForm
