@@ -13,7 +13,7 @@ import {
 
 import {Auth} from "../api.service";
 
-function AuthModal({openAuthModal, handleClose, setsnackbarState}) {
+function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
     const [loginDetails, setLoginDetails] = React.useState({
       username: "",
       password: "",
@@ -29,7 +29,7 @@ function AuthModal({openAuthModal, handleClose, setsnackbarState}) {
         Auth.signUp(signUpDetails)
         .then(()=>{
           setsnackbarState({open: true, message: "Succesfully signed up!", severity: "success"});
-          handleClose();
+          handleAuthClose();
         })
         .catch(() => setsnackbarState({open: true, message: "Unable to sign up", severity: "error"}))
       };
@@ -38,7 +38,7 @@ function AuthModal({openAuthModal, handleClose, setsnackbarState}) {
         Auth.login(loginDetails)
         .then(() => {
           setsnackbarState({open: true, message: "Succesfully logged in!", severity: "success"});
-          handleClose();
+          handleAuthClose();
         })
         .catch((err)=> {
           console.log(err);
@@ -49,7 +49,7 @@ function AuthModal({openAuthModal, handleClose, setsnackbarState}) {
     return (
         <Modal
         open={openAuthModal}
-        onClose={handleClose}
+        onClose={handleAuthClose}
         >
         <Box>
             <Paper 

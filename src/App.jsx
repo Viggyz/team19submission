@@ -8,8 +8,9 @@ import SearchBar  from "./components/searchBar";
 import EventsBlock from "./components/eventBlock";
 import AuthModal from "./components/authModal";
 import AddEventForm from "./components/addEventForm"
+import UserStatusBar from "./components/userStatusbar"; 
+
 import { Locations } from "./api.service";
-import { FormatColorResetTwoTone } from "@mui/icons-material";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
@@ -26,8 +27,8 @@ function App() {
   
   const handleEventOpen = () => setOpenEventModal(true);
   const handleEventClose = () => setOpenEventModal(false);
-  const handleOpen = () => setOpenAuthModal(true);
-  const handleClose = () => setOpenAuthModal(false);
+  const handleAuthOpen = () => setOpenAuthModal(true);
+  const handleAuthClose = () => setOpenAuthModal(false);
   const handleSnackbarClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -101,48 +102,22 @@ function App() {
         location={currentLocation}
         currentEvents={currentEvents}
         handleEventOpen={handleEventOpen}
-      ></EventsBlock>
+      />
       <AddEventForm
       openEventModal={openEventModal}
       handleEventClose={handleEventClose}
-      >
-
-      </AddEventForm>
+      />
       <AuthModal
-        handleClose={handleClose}
+        handleAuthClose={handleAuthClose}
         openAuthModal={openAuthModal}
         setsnackbarState={setsnackbarState}
-      >
-
-      </AuthModal>
+      />
+    <UserStatusBar
+      isUserLoggedIn={isUserLoggedIn}
+      removeTokens={removeTokens}
+      handleAuthOpen={handleAuthOpen}
+    />
       
-      { isUserLoggedIn ?
-        <Box id="logged-in-bar" sx={{position: 'absolute', top: 0, right: '1rem'  }}>
-          <Paper sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', px: 1}}>
-            {/* <Typography>Logged In</Typography> */}
-            <Button 
-              size="small" 
-              color="error"
-              onClick={removeTokens}
-              // sx={{mx: 1}}
-            >Log out</Button>
-          </Paper>
-        </Box>
-      : 
-            <Box id="log-in-button" sx={{position: 'absolute', top: 0, right: '1rem'  }}>
-              <Button 
-                variant="contained"
-                size="small"
-                color="success"
-                type="out"
-                onClick={() => {
-                  handleOpen(true);
-                }}
-              >
-                Login 
-              </Button>          
-            </Box>
-      }
     </div>
   );
 }
