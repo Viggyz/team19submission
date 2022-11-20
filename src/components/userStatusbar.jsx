@@ -1,34 +1,55 @@
+import React from 'react';
+
 import {
     Box,
     Paper,
     Button,
-    Typography
+    Typography,
+    Divider
 } from "@mui/material";
 
-function userStatusBar({ isUserLoggedIn, removeTokens, handleAuthOpen }) {
+import MyEventsModal from "./MyEventsModal";
+
+
+function userStatusBar({ isUserLoggedIn, removeTokens, handleAuthOpen}) {
+  const [openMyEventsModal, setOpenMyEventsModal] = React.useState(false);
+  
+  const handleMyEventsOpen = () => setOpenMyEventsModal(true);
+  const handleMyEventsClose = () => setOpenMyEventsModal(false);
+  
   return (
     <Box
       id="logged-in-bar"
       sx={{ position: "absolute", top: 0, right: "1rem" }}
     >
       {isUserLoggedIn ? (
-        <Paper
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            px: 1,
-          }}
-        >
-          {/* <Typography>Logged In</Typography> */}
-          <Button
-            size="small"
-            color="error"
-            onClick={removeTokens}
+        <div>
+          <Paper
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              px: 1,
+            }}
           >
-            Log out
-          </Button>
-        </Paper>
+            <Button
+              onClick={handleMyEventsOpen}
+            >My Events</Button>
+            <Divider orientation='vertical' flexItem sx={{align:'center', maxHeight:'80%', paddingRight:'5px'}}/>
+            <Button
+              size="small"
+              color="error"
+              onClick={removeTokens}
+            >
+              Log out
+            </Button>
+          </Paper>
+          <MyEventsModal
+           openMyEventsModal={openMyEventsModal}
+           handleMyEventsClose={handleMyEventsClose} 
+          >
+          </MyEventsModal>
+        </div>
       ) : (
         <Button
           variant="contained"

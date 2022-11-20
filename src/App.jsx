@@ -27,6 +27,7 @@ function App() {
   
   const handleEventOpen = () => setOpenEventModal(true);
   const handleEventClose = () => setOpenEventModal(false);
+ 
   const handleAuthOpen = () => setOpenAuthModal(true);
   const handleAuthClose = () => setOpenAuthModal(false);
   const handleSnackbarClose = (event, reason) => {
@@ -112,6 +113,7 @@ function App() {
         openAuthModal={openAuthModal}
         setsnackbarState={setsnackbarState}
       />
+      
     <UserStatusBar
       isUserLoggedIn={isUserLoggedIn}
       removeTokens={removeTokens}
