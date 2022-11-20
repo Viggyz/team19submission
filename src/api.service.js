@@ -146,7 +146,7 @@ export class Locations {
             location: {
                 osm_type_id: location_id,
                 name: location.name,
-                place: location.place,
+                place: location.display_name,
                 address: location.address,
             }
         })
