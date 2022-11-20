@@ -28,13 +28,16 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                     location &&
                     <Box sx={{height: '100%', width: '100%'}}>
                         <Typography variant='h5'>{location.name}</Typography>
-                        <Typography variant='subtitle1' sx={{textTransform: 'capitalize', color: 'text.secondary'}}>{location.type.replace("_", " ") || ""}</Typography>
-                        <Button 
+                        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                            <Typography variant='subtitle1' sx={{textTransform: 'capitalize', color: 'text.secondary'}}>{location.type.replace("_", " ") || ""}</Typography>
+                            <Button 
                             sx = {{backgroundColor: 'transparent', variant: 'outlined'}}
                             onClick = {handleEventOpen}
-                        >  
-                            <AddOutlined/> Add Event 
-                        </Button>
+                            >  
+                                {/* <AddOutlined/> */}
+                                 Add Event 
+                            </Button>
+                        </Box>
                         <Divider />
                         <List>
                             {
