@@ -7,7 +7,7 @@ import { Locations } from "../api.service";
 
 
 
-function MapComponent({userCoords, handleMarkerClick, setIsSignUp, setIsLogin}) {
+function MapComponent({userCoords, handleMarkerClick}) {
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [locations, setLocations] = useState([]);
@@ -60,7 +60,7 @@ function MapComponent({userCoords, handleMarkerClick, setIsSignUp, setIsLogin}) 
     },[userCoords])
     
     return (
-        <div className="map"  onClick={()=>{setIsSignUp(false); console.log("clicked"); setIsLogin(false)}} ref={mapContainer}>
+        <div className="map"  ref={mapContainer}>
         </div>
     )
 }

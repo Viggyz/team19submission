@@ -15,6 +15,17 @@ const AuthClient = axios.create({
   headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
 });
 
+AuthClient.interceptors.request.use(function (config) {
+  if (window.localStorage.getItem("access")) {
+    config.headers['Authorization'] = `Bearer ${window.localStorage.getItem("access")}`;
+    return Promise.resolve(config);
+  }
+  return Promise.reject(config);
+}, function (error) {
+  return Promise.reject(error);
+});
+
+
 AuthClient.interceptors.response.use(
   function (response) {
     return Promise.resolve(response);
@@ -23,7 +34,7 @@ AuthClient.interceptors.response.use(
     if (error.status === 401) {
       Auth.refreshToken()
         .then(() => {
-          AuthClient.request(error.config)
+          AuthClient.request(error.config) 
             .then((response) => Promise.resolve(response))
             .catch((err) => Promise.reject(err));
         })
@@ -76,19 +87,24 @@ export class Auth {
 
   static refreshToken() {
     return new Promise((resolve, reject) => {
-      Client.post("auth/refresh_token", {
-        refresh: localStorage.getItem("access"),
-      })
-        .then(({ access }) => {
-          localStorage.setItem("access", access);
-          AuthClient.defaults.headers["Authorization"] = access;
-          resolve(true);
+      if(localStorage.getItem("refresh")) {
+        Client.post("auth/refresh_token", {
+          refresh: localStorage.getItem("refresh"),
         })
-        .catch((err) => {
-          localStorage.removeItem("access");
-          localStorage.removeItem("refresh");
-          reject(err)
-        });
+          .then(({ access }) => {
+            localStorage.setItem("access", access);
+            AuthClient.defaults.headers["Authorization"] = access;
+            resolve(access);
+          })
+          .catch((err) => {
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            reject(err);
+          });
+      }
+      else {
+        reject('No token');
+      }
     });
   }
 }
