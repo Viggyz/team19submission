@@ -15,8 +15,8 @@ PLACE_TYPES = [
 ]
 
 class GeoServiceClient:
-    @classmethod
-    def get(cls, endpoint, query_params):
+    @staticmethod
+    def get(endpoint, query_params):
         url = f'{BASE_API_URL}/{endpoint}'
         query_params.update({
             'key': config('GEOSERVICE_APIKEY'),
@@ -45,7 +45,7 @@ class GeoServiceClient:
             'q': query,
 
             'countrycodes': 'in',
-            'tag': 'place:*',
+            'tag': 'place:*,highway:*',
             
             'dedupe': 1,
             'limit': '5',
