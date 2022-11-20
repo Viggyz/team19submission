@@ -134,6 +134,7 @@ function App() {
       isUserLoggedIn={isUserLoggedIn}
       removeTokens={removeTokens}
       handleAuthOpen={handleAuthOpen}
+      setsnackbarState={setsnackbarState}
     />
       
     </div>

@@ -1,24 +1,39 @@
 import React from 'react';
 
 import {
-  Link,
   Modal, 
   Paper,
-  Box, 
-  TextField, 
-  Button, 
+  List,
+  ListItem,
+  ListItemText,
   Typography,
+  ButtonGroup,
+  IconButton,
+  ListItemButton
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { Events } from '../api.service';
 
-function MyEventsModal({openMyEventsModal, handleMyEventsClose}) {
+function MyEventsModal({openMyEventsModal, handleMyEventsClose, setsnackbarState}) {
+  const [myEvents, setMyEvents] = React.useState([]);
+
+  React.useEffect(()=> {
+    if(openMyEventsModal) {
+      Events.getMyEvents()
+      .then(({data}) => {
+        setMyEvents(data)
+      })
+      .catch((err) => setsnackbarState({open: true, message: "Could not retrieve own events", severity: "error"}))
+    }
+  }, [openMyEventsModal])
+
   return(
     <Modal
       open={openMyEventsModal}
       onClose={handleMyEventsClose}
     >
-        <Box>
             <Paper
               style={{
                 position: 'absolute',
@@ -30,10 +45,37 @@ function MyEventsModal({openMyEventsModal, handleMyEventsClose}) {
                 padding: '1rem',
             }}
             >
-              
-                <Typography>Hello, there!</Typography>
+              <Typography variant="h5">My Events</Typography>
+              <List style={{height: "80vh",overflow: 'auto'}}>
+                {
+                  myEvents && myEvents.map((event) => {
+                    return (
+                      <ListItem 
+                        key={event.id} 
+                        sx={{display: 'flex', justifyContent: 'end'}}
+                      >
+                        <ListItemText 
+                          primary={event.name}
+                          secondary={event.description}
+                          sx={{flexGrow: 40}}
+                        >
+                        </ListItemText>
+                          <ListItemButton sx={{flexShrink: 15}}>
+                            <IconButton aria-label="delete" color="error">
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemButton>
+                          <ListItemButton sx={{flexShrink: 15}}>
+                            <IconButton aria-label="delete" color="info">
+                              <EditIcon />
+                            </IconButton>
+                          </ListItemButton>
+                      </ListItem>
+                    )
+                  })
+                }
+              </List>
             </Paper>
-        </Box>
     </Modal>
   )
 }
