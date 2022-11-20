@@ -52,7 +52,8 @@ class LocationListAPIView(APIView):
                 elif HE.response.status_code == 429:
                     return Response({'details': 'Try again in a few seconds'}, status.HTTP_429_TOO_MANY_REQUESTS)
         return Response({'message': 'Latitude and longitude need to be passed as query params'}, status.HTTP_400_BAD_REQUEST)
-        
+
+# class Events Mine 
 class LocationDetailAPIView(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -70,7 +71,7 @@ class LocationEventListAPIView(APIView):
 
     def get(self, request, osm_id):
         try:
-            qs = Location.objects.get(osm_type_id=osm_id).events.all()
+            qs = Location.objects.get(osm_type_id=osm_id).events.order_by('start_time')[:10]
             serializer = EventListSerializer(qs, many=True)
             return Response(serializer.data)
         except Location.DoesNotExist:
@@ -139,6 +140,13 @@ class EventIntrestAPIView(APIView):
             return Response({}, status.HTTP_204_NO_CONTENT)
         except Event.DoesNotExist:
             return Response({'detail': 'Invalid event_id passed'}, status.HTTP_400_BAD_REQUEST)
+
+class EventsCreatedAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self, request):
+        qs = request.user.created_events.all()[:10]
+        serializer = EventListSerializer(qs, many=True)
+        return Response(serializer.data)
 
 class SignUpAPIView(APIView):
     permission_classes = (permissions.AllowAny, )

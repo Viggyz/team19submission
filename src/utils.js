@@ -16,7 +16,7 @@ export const backOffAPICall = (clientFunc, config, retryCondition) => {
             clientFunc.apply(null, config)
             .then((data) => resolve(data))
             .catch((err) => {
-                if (errorCondition(err)) {
+                if (retryCondition(err)) {
                     if (count<3) {
                         count++;
                         setTimeout(() => {
