@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { encode_location_id } from "./utils";
+import { encodeLocationId, backOffAPICall } from "./utils";
 
 const BASE_URL = "http://localhost:8000/api";
 
@@ -35,11 +35,18 @@ AuthClient.interceptors.response.use(
 );
 
 export function searchPlaces(query) {
-  return Client.get("search", {
-    params: {
-      q: query,
-    },
-  });
+  // TODO do exponential backoff retries
+  return backOffAPICall(
+    Client.get,
+    ["search", {
+      params: {
+        q: query,
+      },
+    }],
+    (err) => {
+      return err.status_code === 429;
+    }
+  );
 }
 
 export class Auth {
@@ -77,7 +84,11 @@ export class Auth {
           AuthClient.defaults.headers["Authorization"] = access;
           resolve(true);
         })
-        .catch((err) => reject(err));
+        .catch((err) => {
+          localStorage.removeItem("access");
+          localStorage.removeItem("refresh");
+          reject(err)
+        });
     });
   }
 }
@@ -88,23 +99,30 @@ export class Locations {
             lon,
             lat,
         };
-        return Client.get("locations", {
-            params,
-        });
+        return backOffAPICall(
+          Client.get,
+          [
+            "locations",
+            {
+              params,
+            }
+          ],
+          (err) => err.status_code === 429
+        )
     }
 
     static get(location) {
-        location_id = encode_location_id(location);
+        const location_id = encodeLocationId(location);
         return Client.get(`locations/${location_id}`);
     }
 
     static events(location) {
-        location_id = encode_location_id(location);
+        const location_id = encodeLocationId(location);
         return Client.get(`locations/${location_id}/events`)
     }
 
     static createEvent(location, payload) {
-        location_id = encode_location_id(location);
+        const location_id = encodeLocationId(location);
         return AuthClient.post(`locations/${location_id}/events`, {
             ...payload,
             location: {

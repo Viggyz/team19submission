@@ -24,27 +24,22 @@ function App() {
     message: "",
     severity: ""
   })
-  const [isSignup, setIsSignUp] = useState(false);
   const [openAuthModal, setOpenAuthModal] = useState(false);
 
-  function callEventsAPI(location) {
-    if(location) {
-      Locations.events(location)
-      .then(data => {
-        return setCurrentEvents(data);
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          setCurrentEvents([])
-        }
-      })
-    }
-  }
-  
   function handleMarkerClick(location) {
     if(location) {
       setCurrentLocation(location);
-      callEventsAPI(location);
+      if(location) {
+        Locations.events(location)
+        .then(data => {
+          return setCurrentEvents(data);
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            setCurrentEvents([])
+          }
+        })
+      }
     }
   }
  
@@ -95,7 +90,6 @@ function App() {
       </Snackbar>
       <MapComponent
         userCoords={userCoords}
-        setIsSignUp={setIsSignUp}
         handleMarkerClick={handleMarkerClick}
       ></MapComponent>
       <SearchBar setUserCoords={setUserCoords}></SearchBar>
