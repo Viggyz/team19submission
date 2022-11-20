@@ -1,9 +1,9 @@
 import React from 'react';
 
-import axios from 'axios';
 import {IconButton, Box, Paper, Divider, Typography, List, ListItem, ListItemText, Button} from '@mui/material';
 import {AddCircleOutlined, AddOutlined} from "@mui/icons-material"
 
+import { Event } from "../utils";
 
 let event_objs = [
     {
@@ -72,7 +72,14 @@ function EventsBlock({location, currentEvents, handleEventOpen}) {
                                                 primary={event.name}
                                                 secondary={event.description}
                                             />
-                                            <IconButton sx ={{size: 'small'}}> <AddCircleOutlined/> </IconButton>                                            
+                                            <IconButton 
+                                                sx ={{size: 'small'}}
+                                                onClick={() => {
+                                                    Event.showIntrest()
+                                                    .then()
+                                                    .catch()
+                                                }}
+                                            > <AddCircleOutlined/> </IconButton>                                            
                                         </ListItem>
                                         )
                                     })
