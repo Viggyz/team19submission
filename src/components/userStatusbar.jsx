@@ -34,10 +34,12 @@ function userStatusBar({ isUserLoggedIn, removeTokens, handleAuthOpen}) {
           >
             <Button
               onClick={handleMyEventsOpen}
+              size="small"
             >My Events</Button>
             <Divider orientation='vertical' flexItem sx={{maxHeight:'80%', mx:'8px'}}/>
             <Button
               color="error"
+              size="small"
               onClick={removeTokens}
             >
               Log out
