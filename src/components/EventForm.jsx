@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 // import {TimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 // import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Locations } from "../api.service";
-import dayjs from "dayjs";
-function EventForm({ location, setsnackBarState }) {
+
+function EventForm({ location, setsnackbarState }) {
   const [eventName, setEventName] = useState();
   const [startTime, setStartTime] = useState();
   const [endTime, setEndTime] = useState();

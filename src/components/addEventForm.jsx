@@ -20,7 +20,7 @@ function AddEventForm({openEventModal, handleEventClose, currentLocation, setsna
                 padding: '1rem',
             }}
         >
-        <EventForm location={currentLocation} setsnackBarState={setsnackbarState}/> 
+        <EventForm location={currentLocation} setsnackbarState={setsnackbarState}/> 
           
         </Paper>
       </Box>

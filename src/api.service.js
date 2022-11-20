@@ -11,7 +11,7 @@ const Client = axios.create({
 
 const AuthClient = axios.create({
   baseURL: BASE_URL,
-  timeout: 1000,
+  timeout: 2000,
   headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
 });
 
