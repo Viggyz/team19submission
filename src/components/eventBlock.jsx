@@ -52,7 +52,6 @@ function EventsBlock({location, currentEvents, handleEventOpen}) {
                     padding: '1rem', 
                     width: '20vw',
                     minWidth: '250px',
-                    marginRight: '1rem',
                 }}
             >
                 {

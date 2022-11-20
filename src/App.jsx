@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-import { Button, Box, Snackbar, Alert, Typography } from "@mui/material";
+import { Button, Box, Paper, Snackbar, Alert, Typography } from "@mui/material";
 
 import MapComponent from "./components/mapComponent";
 import SearchBar  from "./components/searchBar";
@@ -9,22 +9,36 @@ import EventsBlock from "./components/eventBlock";
 import AuthModal from "./components/authModal";
 import AddEventForm from "./components/addEventForm"
 import { Locations } from "./api.service";
+import { FormatColorResetTwoTone } from "@mui/icons-material";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
   const [currentLocation, setCurrentLocation] = useState(null);
   const [currentEvents, setCurrentEvents] = useState(null);
   const [openEventModal, setOpenEventModal] = useState(false)
-
-  const handleEventOpen = () => setOpenEventModal(true);
-  const handleEventClose = () => setOpenEventModal(false);
-
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(localStorage.getItem("access")?true:false);
   const [snackbarState, setsnackbarState] = useState({
     open: false,
     message: "",
-    severity: ""
+    severity: "success"
   })
   const [openAuthModal, setOpenAuthModal] = useState(false);
+  
+  const handleEventOpen = () => setOpenEventModal(true);
+  const handleEventClose = () => setOpenEventModal(false);
+  const handleOpen = () => setOpenAuthModal(true);
+  const handleClose = () => setOpenAuthModal(false);
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setsnackbarState({
+      ...snackbarState,
+      open:false
+    });
+  };
+
 
   function handleMarkerClick(location) {
     if(location) {
@@ -43,37 +57,27 @@ function App() {
     }
   }
  
-  const handleOpen = () => setOpenAuthModal(true);
-  const handleClose = () => setOpenAuthModal(false);
+  function removeTokens() {
+    window.localStorage.removeItem("access");
+    window.localStorage.removeItem("refresh");
+    setIsUserLoggedIn(false);
+  }
   
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setsnackbarState({
-      ...snackbarState,
-      open:false
-    });
-  };
-
-  
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-  };
-  
-
   useEffect(() => {
     setUserCoords({longitude: '77.5946',latitude: '12.9716'});
+    window.addEventListener('addTokens', () => {
+      setIsUserLoggedIn(true);
+    });
+    window.addEventListener('removeTokens', () => {
+      setIsUserLoggedIn(false);
+    });
+    return () => {
+      window.removeEventListener('addTokens', () => setIsUserLoggedIn(true));
+      window.removeEventListener('removeTokens', () => setIsUserLoggedIn(false));
+    }
   }, []);
+
+
   return (
     <div className="map-wrap">
       <Snackbar 
@@ -112,18 +116,24 @@ function App() {
 
       </AuthModal>
       
-      {localStorage.getItem("access") ?
-      
-        <div className="signup-button">
-            <Typography sx = {{backgroundColor:'white'}}> Logged In.</Typography>
-          </div>
+      { isUserLoggedIn ?
+        <Box id="logged-in-bar" sx={{position: 'absolute', top: 0, right: '1rem'  }}>
+          <Paper sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', px: 1}}>
+            {/* <Typography>Logged In</Typography> */}
+            <Button 
+              size="small" 
+              color="error"
+              onClick={removeTokens}
+              // sx={{mx: 1}}
+            >Log out</Button>
+          </Paper>
+        </Box>
       : 
-          <div className="signup-button">
-            <Box>
+            <Box id="log-in-button" sx={{position: 'absolute', top: 0, right: '1rem'  }}>
               <Button 
                 variant="contained"
                 size="small"
-                color="info"
+                color="success"
                 type="out"
                 onClick={() => {
                   handleOpen(true);
@@ -132,7 +142,6 @@ function App() {
                 Login 
               </Button>          
             </Box>
-          </div>
       }
     </div>
   );

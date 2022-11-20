@@ -70,6 +70,7 @@ export class Auth {
         .then(({data : { access, refresh }}) => {
           localStorage.setItem("access", access);
           localStorage.setItem("refresh", refresh);
+          dispatchEvent(new Event("addTokens"))
           AuthClient.defaults.headers["Authorization"] = access;
           resolve(true);
         })
@@ -99,6 +100,7 @@ export class Auth {
           .catch((err) => {
             localStorage.removeItem("access");
             localStorage.removeItem("refresh");
+            dispatchEvent(new Event("removeTokens"))
             reject(err);
           });
       }
