@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Paper, TextField, Autocomplete, Grid, Typography } from "@mui/material";
+import {Paper, TextField, InputBase, Box, Autocomplete, Grid, Typography } from "@mui/material";
 
 import {searchPlaces} from "../api.service";
 
@@ -27,7 +27,7 @@ function SearchBar({ setUserCoords}) {
     <div id="search-bar">
       <Autocomplete
         id="basic-search"
-        sx={{ width: 300 }}
+        sx={{ width: 300, position: 'absolute', top: '1rem', left: "1rem" }}
         options={options}
         getOptionLabel={(option) =>
           option && option.display_name || ""
@@ -50,18 +50,22 @@ function SearchBar({ setUserCoords}) {
                 debouncedCallSearchAPI(newInputValue);
             }
         }}
-        renderInput={(params) => (
-            <Paper elevation={5} sx = {{
-              minWidth: '500px'
+        renderInput={(params) => {
+          const {InputLabelProps,InputProps,...rest} = params;
+
+          return (
+            <Paper component="form" elevation={4} sx = {{
+              minWidth: '400px',
             }}>
-              <TextField 
-                {...params} 
-                sx={{margin: '1rem', backgroundColor: 'white' }} 
-                label="Add a location" 
-                InputLabelProps={{ disabled: true}}
-            />
+              <InputBase
+                sx={{p:1}}
+                {...params.InputProps} {...rest}
+                placeholder="Enter a location..."
+                />
             </Paper>
-        )}
+          )
+        }}
+        
         renderOption={(props, option) => {
             return (
               <li {...props}>

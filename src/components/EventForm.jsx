@@ -34,35 +34,33 @@ function EventForm({ location, setsnackbarState, handleEventClose }) {
   }
   return (
     <Box sx={{display:"flex", alignItems:"center", justifyContent:"around", flexDirection:"column" }} className="parent">
-      <Typography variant="h5">Add</Typography>
-      <TextField label="name" className="event-textfield"  onChange={(evt) => setEventName(evt.target.value)} />
+      <Typography variant="h5">Create New Event</Typography>
+      <TextField label="Event Name" className="event-textfield"  onChange={(evt) => setEventName(evt.target.value)} />
         <TextField
         className="event-textfield"
           type="datetime-local"
-          label="Start When"
+          label="Start Time"
           InputLabelProps={{
             shrink: true,
           }}
           onChange={(evt) => {
             setStartTime(evt.target.value);
-            console.log(evt.target.value);
           }}
         />
        <TextField
        className="event-textfield"
-          label="End When"
+          label="End Time"
           type="datetime-local"
           InputLabelProps={{
             shrink: true,
           }}
           onChange={(evt) => {
             setEndTime(evt.target.value);
-            console.log(evt.target.value);
           }}
         />
         <TextField className="event-textfield" label="Description" onChange={(evt) => setDescription(evt.target.value)} />
-        <TextField className="event-textfield" label="Max people" onChange={(evt) => setMax_people(evt.target.value)} />
-        <Button type="filled" onClick={handleClick}>ADD EVENT</Button>
+        <TextField className="event-textfield" type="number" label="Max people" onChange={(evt) => setMax_people(evt.target.value)} />
+        <Button variant="contained" onClick={handleClick} sx={{marginBottom: "1rem"}}>ADD EVENT</Button>
     {/* </div> */}
     </Box>
   );
