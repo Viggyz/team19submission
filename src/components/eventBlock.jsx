@@ -3,7 +3,7 @@ import React from 'react';
 import {IconButton, Box, Paper, Divider, Typography, List, ListItem, ListItemText, Button} from '@mui/material';
 import {AddCircleOutlined, AddOutlined} from "@mui/icons-material"
 
-import { Event } from "../api.service";
+import { Events } from "../api.service";
 
 let event_objs = [
     {
@@ -75,9 +75,11 @@ function EventsBlock({location, currentEvents, handleEventOpen}) {
                                             <IconButton 
                                                 sx ={{size: 'small'}}
                                                 onClick={() => {
-                                                    Event.showIntrest()
-                                                    .then()
-                                                    .catch()
+                                                    Events.addIntrest(event.id)
+                                                    .then(()=>{
+                                                        setsnackbarState({open: true, message: "Successfully Showed interest", severity: "success"})
+                                                    })
+                                                    .catch(()=>{setsnackbarState({open: true, message: "Already Showed interest", severity: "error"})})
                                                 }}
                                             > <AddCircleOutlined/> </IconButton>                                            
                                         </ListItem>
