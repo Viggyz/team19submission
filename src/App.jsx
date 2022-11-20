@@ -13,6 +13,7 @@ import AddEventForm from "./components/addEventForm"
 import UserStatusBar from "./components/userStatusbar"; 
 
 import { Locations } from "./api.service";
+import axios from "axios";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
@@ -77,7 +78,26 @@ function App() {
   }
   
   useEffect(() => {
-    setUserCoords({longitude: '77.5946',latitude: '12.9716'});
+    fetch('https://ipapi.co/json/')
+    .then(response => response.json())
+    .then(({country_name, latitude, longitude}) => {
+      if (country_name === 'India') {
+        setUserCoords({ longitude, latitude});
+      }
+      else {
+        setUserCoords({ longitude, latitude});
+        // Uncomment below if you want to start off in bangalore
+        // setUserCoords({longitude: '77.5946',latitude: '12.9716'});
+      }
+    })
+    .catch(err => console.debug(err))
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
+    //     const {latitude, longitude} = position.coords;
+    //     setUserCoords({longitude, latitude});
+    //   },
+    //   (err) => {}
+    // )
     window.addEventListener('addTokens', () => {
       setIsUserLoggedIn(true);
     });
