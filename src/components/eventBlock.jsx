@@ -35,7 +35,7 @@ let event_objs = [
     }
 ]
 
-function EventsBlock({location, currentEvents}) {
+function EventsBlock({location, currentEvents, handleEventOpen}) {
     return (
         <Box id='events-block' sx={{
             zIndex: 1, 
@@ -59,7 +59,8 @@ function EventsBlock({location, currentEvents}) {
                     location &&
                     <Box sx={{height: '100%', width: '100%'}}>
                         <Typography variant='h5'>{location.name}</Typography>
-                        <Button sx = {{backgroundColor: 'transparent', variant: 'outlined'}}>  
+                        <Button sx = {{backgroundColor: 'transparent', variant: 'outlined'}}
+                        onClick = {handleEventOpen}>  
                         <AddOutlined/> Add Event </Button>
                         <Typography variant='subtitle1'>{location.address.road || ""}</Typography>
                         <Divider />

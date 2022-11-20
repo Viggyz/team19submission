@@ -7,12 +7,17 @@ import MapComponent from "./components/mapComponent";
 import SearchBar  from "./components/searchBar";
 import EventsBlock from "./components/eventBlock";
 import AuthModal from "./components/authModal";
+import AddEventForm from "./components/addEventForm"
 import { Locations } from "./api.service";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
   const [currentLocation, setCurrentLocation] = useState(null);
   const [currentEvents, setCurrentEvents] = useState(null);
+  const [openEventModal, setOpenEventModal] = useState(false)
+
+  const handleEventOpen = () => setOpenEventModal(true);
+  const handleEventClose = () => setOpenEventModal(false);
 
   const [snackbarState, setsnackbarState] = useState({
     open: false,
@@ -97,7 +102,14 @@ function App() {
       <EventsBlock 
         location={currentLocation}
         currentEvents={currentEvents}
+        handleEventOpen={handleEventOpen}
       ></EventsBlock>
+      <AddEventForm
+      openEventModal={openEventModal}
+      handleEventClose={handleEventClose}
+      >
+
+      </AddEventForm>
       <AuthModal
         handleClose={handleClose}
         openAuthModal={openAuthModal}
@@ -105,6 +117,7 @@ function App() {
       >
 
       </AuthModal>
+      
         <div className="signup-button">
           <Box>
             <Button 
