@@ -35,9 +35,8 @@ function userStatusBar({ isUserLoggedIn, removeTokens, handleAuthOpen}) {
             <Button
               onClick={handleMyEventsOpen}
             >My Events</Button>
-            <Divider orientation='vertical' flexItem sx={{align:'center', maxHeight:'80%', paddingRight:'5px'}}/>
+            <Divider orientation='vertical' flexItem sx={{maxHeight:'80%', mx:'8px'}}/>
             <Button
-              size="small"
               color="error"
               onClick={removeTokens}
             >
