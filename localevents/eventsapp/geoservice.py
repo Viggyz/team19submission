@@ -4,7 +4,26 @@ from requests.exceptions import RequestException
 from decouple import config
 
 BASE_API_URL = 'https://eu1.locationiq.com/v1'
-TAGS = ['park','stadium']
+TAGS = [
+    # 'park',
+    # 'stadium',
+    'amenity:community_centre',
+    'amenity:library',
+    
+    'leisure:park',
+    'leisure:sports_centre',
+    'leisure:swimming_area',
+    'leisure:swimming',
+    'leisure:playground',
+    'leisure:dog_park',
+    'leisure:picnic_table',
+    'leisure:hackerspace',
+    'leisure:fitness_station',
+    'leisure:hackerspace',
+
+    'tourism:picnic_site',
+    'tourism:picnic_site',
+    ]
 RESPONSE_FORMAT = 'json'
 PLACE_TYPES = [
     'city',
@@ -35,7 +54,7 @@ class GeoServiceClient:
             'tag': ','.join(TAGS),
 
             'format': RESPONSE_FORMAT,
-            'limit': '25',
+            'limit': '35',
         }        
         return GeoServiceClient.get('nearby', query_params)
 
