@@ -8,6 +8,7 @@ import { Button, TextField, Typography, Modal, Box } from "@mui/material";
 import axios from "axios";
 import SearchBar  from "./components/searchBar";
 import EventsBlock from "./components/eventBlock";
+import EventForm from "./components/EventForm";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
@@ -95,6 +96,7 @@ function App() {
         location={currentLocation}
         currentEvents={currentEvents}
       ></EventsBlock>
+      <EventForm location={currentLocation}/>
       {isSignup === true ? (
         <div className="signup-box">
           <div className="sigup-label">SIGN UP</div>
