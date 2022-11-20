@@ -148,6 +148,13 @@ class EventsCreatedAPIView(APIView):
         serializer = EventListSerializer(qs, many=True)
         return Response(serializer.data)
 
+class EventsInterestedAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self, request):
+        qs = request.user.interested_events.all()[:10]
+        serializer = EventListSerializer(qs, many=True)
+        return Response(serializer.data)
+
 class SignUpAPIView(APIView):
     permission_classes = (permissions.AllowAny, )
     
