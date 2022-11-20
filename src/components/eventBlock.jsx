@@ -3,7 +3,7 @@ import React from 'react';
 import {IconButton, Box, Paper, Divider, Typography, List, ListItem, ListItemText, Button} from '@mui/material';
 import {AddCircleOutlined, AddOutlined} from "@mui/icons-material"
 
-import { Event } from "../utils";
+import { Event } from "../api.service";
 
 let event_objs = [
     {
