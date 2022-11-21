@@ -151,6 +151,7 @@ function App() {
       />
       
     <UserStatusBar
+      
       isUserLoggedIn={isUserLoggedIn}
       removeTokens={removeTokens}
       handleAuthOpen={handleAuthOpen}

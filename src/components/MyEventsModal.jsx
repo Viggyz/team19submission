@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 import {
-  Modal, 
+  Modal,
   Paper,
   List,
   ListItem,
@@ -9,75 +9,177 @@ import {
   Typography,
   ButtonGroup,
   IconButton,
-  ListItemButton
+  ListItemButton,
+  Button,
 } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
-import { Events } from '../api.service';
+import { Events } from "../api.service";
+import { margin } from "@mui/system";
 
-function MyEventsModal({openMyEventsModal, handleMyEventsClose, setsnackbarState}) {
+function MyEventsModal({
+  openMyEventsModal,
+  handleMyEventsClose,
+  setsnackbarState,
+}) {
   const [myEvents, setMyEvents] = React.useState([]);
-
-  React.useEffect(()=> {
-    if(openMyEventsModal) {
+  const [openModal, setOpenModal] = React.useState(false);
+  const [selectedEvent, setSelectedEvent] = React.useState();
+  React.useEffect(() => {
+    if (openMyEventsModal) {
       Events.getMyEvents()
-      .then(({data}) => {
-        setMyEvents(data)
-      })
-      .catch((err) => setsnackbarState({open: true, message: "Could not retrieve own events", severity: "error"}))
+        .then(({ data }) => {
+          setMyEvents(data);
+        })
+        .catch((err) =>
+          setsnackbarState({
+            open: true,
+            message: "Could not retrieve own events",
+            severity: "error",
+          })
+        );
     }
-  }, [openMyEventsModal])
+  }, [openMyEventsModal]);
 
-  return(
-    <Modal
-      open={openMyEventsModal}
-      onClose={handleMyEventsClose}
+  return openMyEventsModal ? (
+    <div
+      style={{
+        height: "100vh",
+        minWidth: "100vw",
+        position: "fixed",
+        left: "0",
+        top: "0",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
+        zIndex: "1",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      onClick={() => {
+        handleMyEventsClose();
+      }}
     >
-            <Paper
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '80%',
-                boxShadow: 24,
-                padding: '1rem',
+      <Paper
+        style={{
+          // position: "relative",
+          backgroundColor: "white",
+          // top: "50%",
+          // left: "50%",
+          // transform: "translate(-50%, -25%)",
+          width: "80%",
+          boxShadow: 24,
+          padding: "1rem",
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <Typography variant="h5">My Events</Typography>
+        <List style={{ height: "80vh", overflow: "auto" }}>
+          {myEvents &&
+            myEvents.map((event) => {
+              return (
+                <ListItem
+                  key={event.id}
+                  sx={{ display: "flex", justifyContent: "end" }}
+                >
+                  <ListItemText
+                    primary={event.name}
+                    secondary={event.description}
+                    sx={{ flexGrow: 40 }}
+                  ></ListItemText>
+                  <ListItemButton sx={{ flexShrink: 15 }}>
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => {
+                        setOpenModal(true);
+                        setSelectedEvent(event);
+                      }}
+                      color="error"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemButton>
+                  <ListItemButton sx={{ flexShrink: 15 }}>
+                    <IconButton aria-label="delete" color="info">
+                      <EditIcon />
+                    </IconButton>
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+        </List>
+      </Paper>
+      <Modal
+        open={openModal}
+        onClose={() => {
+          setOpenModal(false);
+        }}
+
+        // style={{width:"fit-content"}}
+      >
+        <Paper
+          style={{
+            position: "relative",
+            backgroundColor: "white",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -25%)",
+            width: "fit-content",
+            padding: "1em",
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <Typography>Are you sure you want to delete?</Typography>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              marginTop: "0.5em",
             }}
+          >
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => setOpenModal(false)}
             >
-              <Typography variant="h5">My Events</Typography>
-              <List style={{height: "80vh",overflow: 'auto'}}>
-                {
-                  myEvents && myEvents.map((event) => {
-                    return (
-                      <ListItem 
-                        key={event.id} 
-                        sx={{display: 'flex', justifyContent: 'end'}}
-                      >
-                        <ListItemText 
-                          primary={event.name}
-                          secondary={event.description}
-                          sx={{flexGrow: 40}}
-                        >
-                        </ListItemText>
-                          <ListItemButton sx={{flexShrink: 15}}>
-                            <IconButton aria-label="delete" color="error">
-                              <DeleteIcon />
-                            </IconButton>
-                          </ListItemButton>
-                          <ListItemButton sx={{flexShrink: 15}}>
-                            <IconButton aria-label="delete" color="info">
-                              <EditIcon />
-                            </IconButton>
-                          </ListItemButton>
-                      </ListItem>
-                    )
+              Cancel
+            </Button>
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => {
+                setOpenModal(false);
+                Events.delete(selectedEvent.id)
+                  .then(() => {
+                    console.log("ss");
+                    Events.getMyEvents()
+                      .then(({ data }) => {
+                        setMyEvents(data);
+                      })
+                      .catch((err) =>
+                        setsnackbarState({
+                          open: true,
+                          message: "Could not retrieve own events",
+                          severity: "error",
+                        })
+                      );
                   })
-                }
-              </List>
-            </Paper>
-    </Modal>
-  )
+                  .catch(() => {
+                    console.log("err");
+                  });
+              }}
+            >
+              DELETE
+            </Button>
+          </div>
+        </Paper>
+      </Modal>
+    </div>
+  ) : null;
 }
 
-export default MyEventsModal
+export default MyEventsModal;
