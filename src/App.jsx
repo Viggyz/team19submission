@@ -91,12 +91,13 @@ function App() {
     .then(({country_name, latitude, longitude, city}) => {
       if (country_name === 'India') {
         setUserCoords({ longitude, latitude});
+        setUserCity(city);
       }
       else {
-        // setUserCoords({longitude: '77.5946',latitude: '12.9716'});
-        setUserCoords({ longitude, latitude});
+        setUserCoords({longitude: '77.5946',latitude: '12.9716'});
+        setUserCity("Bengaluru");
+        // setUserCoords({ longitude, latitude});
       }
-      setUserCity(city);
     })
     .catch(err => console.debug(err))
     
@@ -134,12 +135,15 @@ function App() {
       <SearchBar 
         setUserCoords={setUserCoords}
         setUserCity={setUserCity}
+        setCurrentLocation={setCurrentLocation}
       ></SearchBar>
       <EventsBlock 
         location={currentLocation}
         currentEvents={currentEvents}
         handleEventOpen={handleEventOpen}
         setsnackbarState={setsnackbarState}
+        setUserCoords={setUserCoords}
+        setCurrentEvents={setCurrentEvents}
       />
       <AddEventForm
       openEventModal={openEventModal}

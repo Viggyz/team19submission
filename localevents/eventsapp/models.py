@@ -18,6 +18,8 @@ class Location(models.Model):
     name = models.CharField(max_length=255)
     place = models.CharField(max_length=255)
     address = models.JSONField()
+    lat = models.FloatField(default=12.9732913)
+    lon = models.FloatField(default=77.6404672)
     # description = models.TextField()
 
 class Event(models.Model):

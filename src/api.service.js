@@ -138,8 +138,8 @@ export class Locations {
         return Client.get(`locations/${location_id}`);
     }
 
-    static events(location) {
-        const location_id = encodeLocationId(location);
+    static events(location, osm_type_id=null) {
+        const location_id = osm_type_id || encodeLocationId(location);
         return Client.get(`locations/${location_id}/events`)
     }
 
@@ -152,6 +152,8 @@ export class Locations {
                 name: location.name,
                 place: location.display_name,
                 address: location.address,
+                lat: location.lat,
+                lon: location.lon,
             }
           })
     }

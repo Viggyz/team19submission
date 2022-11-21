@@ -1,12 +1,21 @@
 import React from 'react';
 
-import {IconButton, Box, Paper, Divider, Typography, List, ListItem, ListItemText, Button} from '@mui/material';
-import {AddCircleOutlined, AddOutlined} from "@mui/icons-material"
+import {IconButton, Fab, Box, Paper, Divider, Typography, List, ListItem, ListItemText, Button} from '@mui/material';
+import RoomIcon from '@mui/icons-material/Room';
+import AddIcon from '@mui/icons-material/Add';
 
-import { Events } from "../api.service";
+import { Locations  } from "../api.service";
 import EventDetailModal from './EventDetailModal';
 
-function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, isUserLoggedIn}) {
+function EventsBlock({
+    location,
+    setUserCoords,
+    setCurrentEvents,
+    currentEvents,
+    handleEventOpen,
+    openAuthModal, 
+    isUserLoggedIn
+}) {
     const [openEventDetailModal, setOpenEventDetailModal] = React.useState(false);
 
     const handleEventDetailModalOpen = () => setOpenEventDetailModal(true);
@@ -34,6 +43,7 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                     minWidth: '250px',
                     display: 'flex',
                     flexDirection: 'column',
+                    position: 'relative'
                 }}
             >
                 { location &&
@@ -41,15 +51,15 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                         <Typography variant='h5'>{location.name}</Typography>
                         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                             <Typography variant='subtitle1' sx={{textTransform: 'capitalize', color: 'text.secondary'}}>{location.type.replace("_", " ") || ""}</Typography>
-                            <Button 
-                            sx = {{backgroundColor: 'transparent', variant: 'outlined'}}
-                            onClick = {handleEventOpen}
-                            >  
-                                {/* <AddOutlined/> */}
-                                 Add Event 
-                            </Button>
                         </Box>
                         <Divider />
+                        <Fab 
+                            color='primary' 
+                            sx={{position: 'absolute', bottom: '1.5rem', right: '1rem'}}
+                            onClick = {handleEventOpen}
+                        >
+                            <AddIcon />
+                        </Fab>
                     </Box>
                 }
                     <Box sx={{height: '100%', overflow: 'auto'}}>
@@ -71,13 +81,14 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                                             <IconButton 
                                                 sx ={{size: 'small'}}
                                                 onClick={() => {
-                                                    Events.addIntrest(event.id)
-                                                    .then(()=>{
-                                                        setsnackbarState({open: true, message: "Successfully Showed interest", severity: "success"})
-                                                    })
-                                                    .catch(()=>{setsnackbarState({open: true, message: "Already Showed interest", severity: "error"})})
+                                                    setUserCoords({longitude: event.location.lon, latitude: event.location.lat})
+                                                    // Events.addIntrest(event.id)
+                                                    // .then(()=>{
+                                                    //     setsnackbarState({open: true, message: "Successfully Showed interest", severity: "success"})
+                                                    // })
+                                                    // .catch(()=>{setsnackbarState({open: true, message: "Already Showed interest", severity: "error"})})
                                                 }}
-                                            > <AddCircleOutlined/> </IconButton>                                            
+                                            > <RoomIcon/> </IconButton>                                            
                                         </ListItem>
                                         )
                                     })

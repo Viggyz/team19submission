@@ -33,7 +33,13 @@ class LocationSerializer(serializers.ModelSerializer):
         model = Location
         fields = '__all__'
 
+class LocationCoordsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ["lat", "lon", "osm_type_id"]
 class EventListSerializer(serializers.ModelSerializer):
+    location = LocationCoordsSerializer()
+
     class Meta:
         model = Event
         fields = [
@@ -44,6 +50,7 @@ class EventListSerializer(serializers.ModelSerializer):
             'description',
             'max_people',
             'current_people',
+            'location'
         ]
 
 class EventSerializer(serializers.Serializer):

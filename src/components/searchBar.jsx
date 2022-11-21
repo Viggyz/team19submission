@@ -6,7 +6,7 @@ import {searchPlaces} from "../api.service";
 
 import {debouncedAPICall} from "../utils";
 
-function SearchBar({ setUserCoords, setUserCity}) {
+function SearchBar({ setUserCoords, setUserCity, setCurrentLocation}) {
   const [value, setValue] = React.useState(null);
   const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
@@ -43,6 +43,7 @@ function SearchBar({ setUserCoords, setUserCity}) {
                 setValue(newValue);
                 setUserCity(newValue.address.city || null)
                 setUserCoords({longitude: newValue.lon,latitude: newValue.lat})
+                setCurrentLocation(null);
             }
         }}
         onInputChange={(event, newInputValue) => {
