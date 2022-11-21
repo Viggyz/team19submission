@@ -8,7 +8,6 @@ TAGS = [
     # 'park',
     # 'stadium',
     'amenity:community_centre',
-    'amenity:library',
     
     'leisure:park',
     'leisure:sports_centre',
@@ -16,13 +15,8 @@ TAGS = [
     'leisure:swimming',
     'leisure:playground',
     'leisure:dog_park',
-    'leisure:picnic_table',
-    'leisure:hackerspace',
-    'leisure:fitness_station',
     'leisure:hackerspace',
 
-    'tourism:picnic_site',
-    'tourism:picnic_site',
     ]
 RESPONSE_FORMAT = 'json'
 PLACE_TYPES = [
