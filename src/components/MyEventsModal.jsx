@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  Button,
   ButtonGroup,
   IconButton,
   ListItemButton,
@@ -15,8 +16,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { Events } from "../api.service";
-import { margin } from "@mui/system";
+import { Events } from '../api.service';
 
 function MyEventsModal({
   openMyEventsModal,

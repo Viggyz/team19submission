@@ -4,8 +4,18 @@ import {IconButton, Box, Paper, Divider, Typography, List, ListItem, ListItemTex
 import {AddCircleOutlined, AddOutlined} from "@mui/icons-material"
 
 import { Events } from "../api.service";
+import EventDetailModal from './EventDetailModal';
 
 function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, isUserLoggedIn}) {
+    const [openEventDetailModal, setOpenEventDetailModal] = React.useState(false);
+
+    const handleEventDetailModalOpen = () => setOpenEventDetailModal(true);
+    const handleEventDetailModalClose = () => setOpenEventDetailModal(false);
+
+    const [eventDetailID, setEventDetailID] = React.useState(null)
+
+    const passEventID = (id) => {setEventDetailID(id)}
+
     return (
         <Box id='events-block' sx={{
             zIndex: 1, 
@@ -43,11 +53,17 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                             {
                                 currentEvents && currentEvents.length ? currentEvents.map(event => {
                                     return (
-                                        <ListItem key={event.id}>
-                                            <ListItemText
-                                                primary={event.name}
-                                                secondary={event.description}
-                                            />
+                                        <ListItem key={event.id} sx={{display: 'flex', justifyContent: 'end'}}>
+                                            <Button sx={{flexGrow: 40, textAlign:'left'}}
+                                                onClick={() => {
+                                                    passEventID(event.id);
+                                                    handleEventDetailModalOpen();
+                                                }}>
+                                                <ListItemText
+                                                    primary={event.name}
+                                                    secondary={event.description}
+                                                />
+                                            </Button>
                                             <IconButton 
                                                 sx ={{size: 'small'}}
                                                 onClick={() => {
@@ -70,6 +86,11 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                     </Box>
                 }
             </Paper>
+            <EventDetailModal
+                openEventDetailModal={openEventDetailModal}
+                handleEventDetailModalClose={handleEventDetailModalClose}
+                eventDetailID={eventDetailID}
+            />
         </Box>
     )
 }
