@@ -17,6 +17,7 @@ urlpatterns = [
     path('locations/<str:osm_id>', LocationDetailAPIView.as_view()),
     path('locations/<str:osm_id>/events', LocationEventListAPIView.as_view()),
 
+    path('events', EventListAPIView.as_view()),
     path('events/<int:event_id>', EventDetailAPIView.as_view()),
     path('events/<int:event_id>/interested', EventIntrestAPIView.as_view()),
     path('events/created', EventsCreatedAPIView.as_view()),

@@ -6,17 +6,16 @@ import { Button, Box, Paper, Snackbar, Alert, Typography } from "@mui/material";
 import MapComponent from "./components/mapComponent";
 import SearchBar  from "./components/searchBar";
 import EventsBlock from "./components/eventBlock";
-import EventForm from "./components/EventForm";
 
 import AuthModal from "./components/authModal";
 import AddEventForm from "./components/addEventForm"
 import UserStatusBar from "./components/userStatusbar"; 
 
-import { Locations } from "./api.service";
-import axios from "axios";
+import { Locations, Events } from "./api.service";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
+  const [userCity, setUserCity] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [currentEvents, setCurrentEvents] = useState(null);
   const [openEventModal, setOpenEventModal] = useState(false)
@@ -78,26 +77,29 @@ function App() {
   }
   
   useEffect(() => {
+    Events.list(userCity)
+    .then(({data: events}) => {
+      setCurrentEvents(events);
+      setCurrentLocation(null);
+    })
+    .catch(err => console.debug(err));
+  },[userCity])
+  
+  useEffect(() => {
     fetch('https://ipapi.co/json/')
     .then(response => response.json())
-    .then(({country_name, latitude, longitude}) => {
+    .then(({country_name, latitude, longitude, city}) => {
       if (country_name === 'India') {
         setUserCoords({ longitude, latitude});
       }
       else {
-        setUserCoords({ longitude, latitude});
-        // Uncomment below if you want to start off in bangalore
         // setUserCoords({longitude: '77.5946',latitude: '12.9716'});
+        setUserCoords({ longitude, latitude});
       }
+      setUserCity(city);
     })
     .catch(err => console.debug(err))
-    // navigator.geolocation.getCurrentPosition(
-    //   (position) => {
-    //     const {latitude, longitude} = position.coords;
-    //     setUserCoords({longitude, latitude});
-    //   },
-    //   (err) => {}
-    // )
+    
     window.addEventListener('addTokens', () => {
       setIsUserLoggedIn(true);
     });
@@ -129,7 +131,10 @@ function App() {
         userCoords={userCoords}
         handleMarkerClick={handleMarkerClick}
       ></MapComponent>
-      <SearchBar setUserCoords={setUserCoords}></SearchBar>
+      <SearchBar 
+        setUserCoords={setUserCoords}
+        setUserCity={setUserCity}
+      ></SearchBar>
       <EventsBlock 
         location={currentLocation}
         currentEvents={currentEvents}
@@ -141,6 +146,7 @@ function App() {
       handleEventClose={handleEventClose}
       currentLocation={currentLocation}
       setsnackbarState={setsnackbarState}
+      userCity={userCity}
       >
 
       </AddEventForm>

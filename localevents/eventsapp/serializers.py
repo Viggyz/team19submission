@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.utils import timezone
 
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, APIException
 from rest_framework import serializers
 
 from localevents.regex import osm_type_id_regex
@@ -67,15 +67,18 @@ class EventSerializer(serializers.Serializer):
             location = Location.objects.get(osm_type_id=location_details['osm_type_id'])
         except Location.DoesNotExist: 
             location = None
-            # TODO Prob a try catch
-        with transaction.atomic():
-            if not location:
-                location = Location.objects.create(**location_details)
-            event = Event.objects.create(
-                **validated_data, 
-                location=location,
-                created_by=current_user,
-            )
+        try:
+            with transaction.atomic():
+                if not location:
+                    location = Location.objects.create(**location_details)
+                event = Event.objects.create(
+                    **validated_data, 
+                    location=location,
+                    created_by=current_user,
+                    city=location_details['address'].get('city', None)
+                )
+        except IntegrityError:
+            raise APIException(detail="Unable to create event")
         return event
         
     def update(self, instance: Event, validated_data: dict):

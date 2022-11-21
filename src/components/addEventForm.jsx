@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react'
 import {Link, Modal, Paper,Box, TextField, Button, Typography} from "@mui/material";
 import EventForm from './EventForm';
-function AddEventForm({openEventModal, handleEventClose, currentLocation, setsnackbarState}) {
+function AddEventForm({
+  openEventModal,
+  handleEventClose, 
+  currentLocation, 
+  setsnackbarState,
+  userCity,
+}) {
     return (
       <Modal
     open={openEventModal}
@@ -24,6 +30,7 @@ function AddEventForm({openEventModal, handleEventClose, currentLocation, setsna
           location={currentLocation} 
           setsnackbarState={setsnackbarState}
           handleEventClose={handleEventClose}
+          userCity={userCity}
         /> 
           
         </Paper>

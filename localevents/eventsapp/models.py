@@ -38,6 +38,8 @@ class Event(models.Model):
     max_people = models.IntegerField()
     current_people = models.IntegerField(default=0)
 
+    city = models.CharField(max_length=255, blank=True, null=True)
+
     class Meta:
         constraints = [
             models.CheckConstraint(

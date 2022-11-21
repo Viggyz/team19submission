@@ -59,6 +59,7 @@ class GeoServiceClient:
 
             'countrycodes': 'in',
             'tag': 'place:*,highway:*',
+            'addressdetails': 1,
             
             'dedupe': 1,
             'limit': '5',

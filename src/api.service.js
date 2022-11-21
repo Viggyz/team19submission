@@ -170,6 +170,13 @@ export class Events {
     return AuthClient.get('events/created');
   }
 
+  static list(query=null) {
+    let params = query && {'city': query}; 
+    return Client.get('events', {
+      params
+    });
+  }
+
   static get(event_id) {
     return Client.get(`events/${event_id}`);
   }

@@ -4,22 +4,25 @@ import React, { useEffect, useState } from "react";
 // import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Locations } from "../api.service";
 
-function EventForm({ location, setsnackbarState, handleEventClose }) {
+function EventForm({ location, setsnackbarState, handleEventClose, userCity }) {
   const [eventName, setEventName] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
   const [description, setDescription] = useState("");
   const [max_people, setMax_people] = useState(1);
-  const [currentLocation, setCurrentLocation] = useState();
- 
-  useEffect(() => {
-    setCurrentLocation(location);
-  }, [location]);
 
 
 
   const handleClick = ()=>{
-    Locations.createEvent(currentLocation, {
+    let locationWithCity = {
+      ...location,
+      address: {
+        city: userCity,
+        ...location.address
+      }
+    }
+    
+    Locations.createEvent(locationWithCity, {
       name: eventName,
       start_time: startTime,
       end_time: endTime,

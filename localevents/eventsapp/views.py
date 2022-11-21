@@ -86,6 +86,20 @@ class LocationEventListAPIView(APIView):
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
+class EventListAPIView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        qs = Event.objects.all()
+        if city := request.query_params.get('city', None):
+            qs = (
+                qs.filter(city__iexact=city)
+                if qs.filter(city__iexact=city).exists()
+                else qs
+            )
+        serializer = EventListSerializer(qs, many=True)
+        return Response(serializer.data)
+
 class EventDetailAPIView(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 

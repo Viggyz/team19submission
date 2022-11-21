@@ -32,11 +32,12 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                     padding: '1rem', 
                     width: '20vw',
                     minWidth: '250px',
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
             >
-                {
-                    location &&
-                    <Box sx={{height: '100%', width: '100%'}}>
+                { location &&
+                    <Box>
                         <Typography variant='h5'>{location.name}</Typography>
                         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                             <Typography variant='subtitle1' sx={{textTransform: 'capitalize', color: 'text.secondary'}}>{location.type.replace("_", " ") || ""}</Typography>
@@ -49,6 +50,9 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                             </Button>
                         </Box>
                         <Divider />
+                    </Box>
+                }
+                    <Box sx={{height: '100%', overflow: 'auto'}}>
                         <List>
                             {
                                 currentEvents && currentEvents.length ? currentEvents.map(event => {
@@ -84,7 +88,6 @@ function EventsBlock({location, currentEvents, handleEventOpen, openAuthModal, i
                             }
                         </List>
                     </Box>
-                }
             </Paper>
             <EventDetailModal
                 openEventDetailModal={openEventDetailModal}
