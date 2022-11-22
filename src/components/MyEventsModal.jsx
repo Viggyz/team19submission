@@ -8,6 +8,7 @@ import {
   ListItemText,
   Typography,
   Button,
+  Box,
   ButtonGroup,
   IconButton,
   ListItemButton,
@@ -15,6 +16,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EventForm from "./EventForm";
+import moment from "moment/moment"; 
 import AddEventForm from "./addEventForm";
 import { User, Events } from "../api.service";
 
@@ -22,18 +24,31 @@ function MyEventsModal({
   openMyEventsModal,
   handleMyEventsClose,
   setsnackbarState,
+  refreshUserEvents,
 }) {
   const [myEvents, setMyEvents] = React.useState([]);
   const [openModal, setOpenModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState();
   const [openEventModal, setOpenEventModal] = React.useState(false);
-  const [eventLocation, setEventLocation] = React.useState();
+  const [currentEvent, setCurrentEvent] = React.useState();
+  function setCreatedEvents() {
+    User.createdEvents()
+    .then(({ data }) => {
+      setMyEvents(data);
+    })
+    .catch((err) =>
+      setsnackbarState({
+        open: true,
+        message: "Could not retrieve own events",
+        severity: "error",
+      })
+    );
+  }
   useEffect(() => {
     if (selectedEvent) {
       Events.get(selectedEvent.id)
         .then(({ data }) => {
-          setEventLocation(data.location);
-          console.log(data.location);
+          setCurrentEvent(data);
         })
         .catch((err) => {
           console.log(err);
@@ -42,17 +57,7 @@ function MyEventsModal({
   }, [selectedEvent]);
   React.useEffect(() => {
     if (openMyEventsModal) {
-      User.createdEvents()
-        .then(({ data }) => {
-          setMyEvents(data);
-        })
-        .catch((err) =>
-          setsnackbarState({
-            open: true,
-            message: "Could not retrieve own events",
-            severity: "error",
-          })
-        );
+      setCreatedEvents();
     }
   }, [openMyEventsModal]);
 
@@ -101,34 +106,44 @@ function MyEventsModal({
                   <ListItemText
                     primary={event.name}
                     secondary={event.description}
-                    sx={{ flexGrow: 40 }}
-                  ></ListItemText>
-                  <ListItemButton sx={{ flexShrink: 15 }}>
-                    <IconButton
-                      aria-label="delete"
-                      onClick={() => {
-                        setOpenModal(true);
-                        setSelectedEvent(event);
-                        console.log("event");
-                      }}
-                      color="error"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemButton>
-                  <ListItemButton sx={{ flexShrink: 15 }}>
-                    <IconButton
-                      aria-label="delete"
-                      onClick={() => {
-                        setOpenEventModal(true);
-                        setSelectedEvent(event);
-                        console.log("event", event);
-                      }}
-                      color="info"
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </ListItemButton>
+                    sx={{ flexGrow: 40, color: new Date(event.start_time) > new Date()?'text.primary': 'text.secondary' }}
+                  >
+                  </ListItemText>
+                  {
+                    new Date(event.start_time) > new Date() && 
+                    (   
+                      <>
+                        <ListItemButton 
+                          sx={{ flexShrink: 15 }}
+                          onClick={() => {
+                            setOpenModal(true);
+                            setSelectedEvent(event);
+                          }}
+                          >
+                          <IconButton
+                            aria-label="delete"
+                            color="error"
+                            >
+                            <DeleteIcon />
+                          </IconButton>
+                        </ListItemButton>
+                        <ListItemButton 
+                          sx={{ flexShrink: 15 }}
+                          onClick={() => {
+                            setOpenEventModal(true);
+                            setSelectedEvent(event);
+                          }}
+                        >
+                          <IconButton
+                            aria-label="delete"
+                            color="info"
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </ListItemButton>
+                      </>
+                    )
+                  }
                 </ListItem>
               );
             })
@@ -156,14 +171,15 @@ function MyEventsModal({
         }}
       >
         <AddEventForm
-          currentLocation={eventLocation}
           openEventModal={openEventModal}
           handleEventClose={() => {
+            refreshUserEvents();
+            setCreatedEvents();
             setOpenEventModal(false);
           }}
           useCity={"pass"}
           setsnackbarState={setsnackbarState}
-          currentEvent={selectedEvent}
+          currentEvent={currentEvent}
         />
       </div>
       {/* </Modal>):null}  */}
@@ -208,20 +224,11 @@ function MyEventsModal({
               color="error"
               variant="outlined"
               onClick={() => {
-                setOpenModal(false);
                 Events.delete(selectedEvent.id)
-                  .then(() => {
-                    User.createdEvents()
-                      .then(({ data }) => {
-                        setMyEvents(data);
-                      })
-                      .catch((err) =>
-                        setsnackbarState({
-                          open: true,
-                          message: "Could not retrieve own events",
-                          severity: "error",
-                        })
-                      );
+                .then(() => {
+                    refreshUserEvents();
+                    setCreatedEvents();
+                    setOpenModal(false);
                   })
                   .catch(() => {
                     console.log("err");

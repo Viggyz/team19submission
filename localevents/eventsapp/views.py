@@ -164,7 +164,7 @@ class EventIntrestAPIView(APIView):
 class EventsCreatedAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def get(self, request):
-        qs = request.user.created_events.all()[:10]
+        qs = request.user.created_events.all().order_by('-start_time')
         serializer = EventListSerializer(qs, many=True)
         return Response(serializer.data)
 

@@ -11,7 +11,15 @@ import {
 import MyEventsModal from "../components/MyEventsModal";
 
 
-function userStatusBar({ isUserLoggedIn, removeTokens, handleAuthOpen, setsnackbarState, openEventModal, setLoggedInUsername}) {
+function userStatusBar({ 
+  isUserLoggedIn,
+  removeTokens,
+  handleAuthOpen,
+  setsnackbarState,
+  openEventModal,
+  setLoggedInUsername,
+  refreshUserEvents,
+}) {
   const [openMyEventsModal, setOpenMyEventsModal] = React.useState(false);
   
   const handleMyEventsOpen = () => setOpenMyEventsModal(true);
@@ -49,10 +57,10 @@ function userStatusBar({ isUserLoggedIn, removeTokens, handleAuthOpen, setsnackb
             </Button>
           </Paper>
           <MyEventsModal
-          
-           openMyEventsModal={openMyEventsModal}
-           setsnackbarState={setsnackbarState}
-           handleMyEventsClose={handleMyEventsClose} 
+            refreshUserEvents={refreshUserEvents}
+            openMyEventsModal={openMyEventsModal}
+            setsnackbarState={setsnackbarState}
+            handleMyEventsClose={handleMyEventsClose} 
           >
           </MyEventsModal>
         </div>

@@ -77,27 +77,30 @@ function App() {
     setIsUserLoggedIn(false);
   }
   
-  function updateUserCity(city) {
-    if (city===userCity) {
-      Events.list(userCity)
+  function setEvents(city) {
+    Events.list(city)
       .then(({data: events}) => {
         setCurrentEvents(events);
         setCurrentLocation(null);
       })
       .catch(err => console.debug(err));
+  }
+  
+  function updateUserCity(city) {
+    if (city===userCity) {
+      setEvents(userCity);
     }
     else {
       setUserCity(city);
     }
   }
+
+  function refreshUserEvents() {
+    setEvents(userCity);
+  }
   
   useEffect(() => {
-    Events.list(userCity)
-    .then(({data: events}) => {
-      setCurrentEvents(events);
-      setCurrentLocation(null);
-    })
-    .catch(err => console.debug(err));
+    refreshUserEvents();
   },[userCity])
   
   useEffect(() => {
@@ -179,7 +182,7 @@ function App() {
       />
       
     <UserStatusBar
-      
+      refreshUserEvents={refreshUserEvents}
       isUserLoggedIn={isUserLoggedIn}
       removeTokens={removeTokens}
       handleAuthOpen={handleAuthOpen}

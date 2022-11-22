@@ -24,11 +24,10 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
   useEffect(()=>{
     if(currentEvent){
       setEventName(currentEvent.name);
-      console.log("currentEvent",currentEvent)
       setStartTime(currentEvent.start_time);
       setEndTime(currentEvent.end_time);
       setDescription(currentEvent.description);
-      setMax_people(currentEvent.maxPeople);
+      setMax_people(currentEvent.max_people);
     }
   },[currentEvent])
   function validate() {
@@ -68,16 +67,10 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
     if (!validate()) {
       return;
     }
-    let locationWithCity = {
-      ...location,
-      address: {
-        city: userCity,
-        ...location.address
-      }
-    }
     
     if(currentEvent){
       Events.update(currentEvent.id,{
+        ...currentEvent,
         name: eventName,
         start_time: startTime,
         end_time: endTime,
@@ -88,10 +81,17 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
         setsnackbarState({open: true, message: "Event Successfully Editted!", severity: "success"});
         handleEventClose();
     })
-    .catch((err) => setsnackbarState({open: true, message: "Unable to edit event", severity: "error"}))
+    .catch((er7r) => setsnackbarState({open: true, message: "Unable to edit event", severity: "error"}))
 
     }
     else{
+      let locationWithCity = {
+        ...location,
+        address: {
+          city: userCity,
+          ...location.address
+        }
+      }
       Locations.createEvent(locationWithCity, {
         name: eventName,
         start_time: startTime,
@@ -170,6 +170,7 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
           rows={3}
           className="event-textfield" 
           label="Description" 
+          value={description}
           onChange={(evt) => setDescription(evt.target.value)} 
         />
         <TextField 
