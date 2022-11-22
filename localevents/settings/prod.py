@@ -46,4 +46,4 @@ WHITENOISE_INDEX_FILE = True
 WHITENOISE_ROOT = os.path.join(STATIC_ROOT, 'vue')
 
 django_on_heroku.settings(locals(), staticfiles=True)
-del DATABASES["default"]["OPTIONS"]["sslmode"]
+# del DATABASES["default"]["OPTIONS"]["sslmode"]

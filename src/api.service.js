@@ -2,16 +2,16 @@ import axios from "axios";
 
 import { encodeLocationId, backOffAPICall } from "./utils";
 
-const BASE_URL = "http://localhost:8000/api";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Client = axios.create({
   baseURL: BASE_URL,
-  timeout: 2000,
+  timeout: 5000,
 });
 
 const AuthClient = axios.create({
   baseURL: BASE_URL,
-  timeout: 2000,
+  timeout: 5000,
   headers: { 'Authorization': `Bearer ${localStorage.getItem("access")}` },
 });
 
