@@ -1,11 +1,12 @@
 import React from 'react';
 
-import moment from 'moment/moment';
+import moment from 'moment';
 
 import {
     IconButton,
     Fab, 
-    Box, 
+    Box,
+    Chip, 
     Paper, 
     Divider, 
     Typography, 
