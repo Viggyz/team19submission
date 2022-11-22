@@ -18,8 +18,9 @@ function App() {
   const [userCity, setUserCity] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [currentEvents, setCurrentEvents] = useState(null);
-  const [openEventModal, setOpenEventModal] = useState(false)
+  const [openEventModal, setOpenEventModal] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(localStorage.getItem("access")?true:false);
+  const [loggedInUsername, setLoggedInUserName] = useState("");
   const [snackbarState, setsnackbarState] = useState({
     open: false,
     message: "",
@@ -158,6 +159,8 @@ function App() {
         setsnackbarState={setsnackbarState}
         setUserCoords={setUserCoords}
         setCurrentEvents={setCurrentEvents}
+        loggedInUsername={loggedInUsername}
+        isUserLoggedIn={isUserLoggedIn}
       />
       <AddEventForm
       openEventModal={openEventModal}
@@ -172,6 +175,7 @@ function App() {
         handleAuthClose={handleAuthClose}
         openAuthModal={openAuthModal}
         setsnackbarState={setsnackbarState}
+        setLoggedInUserName={setLoggedInUserName}
       />
       
     <UserStatusBar
@@ -180,6 +184,7 @@ function App() {
       removeTokens={removeTokens}
       handleAuthOpen={handleAuthOpen}
       setsnackbarState={setsnackbarState}
+      setLoggedInUserName={setLoggedInUserName}
     />
       
     </div>

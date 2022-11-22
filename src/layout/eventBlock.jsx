@@ -30,7 +30,8 @@ function EventsBlock({
     currentEvents,
     handleEventOpen,
     openAuthModal, 
-    isUserLoggedIn
+    isUserLoggedIn,
+    loggedInUsername
 }) {
     const [openEventDetailModal, setOpenEventDetailModal] = React.useState(false);
 
@@ -129,6 +130,8 @@ function EventsBlock({
                 openEventDetailModal={openEventDetailModal}
                 handleEventDetailModalClose={handleEventDetailModalClose}
                 eventDetailID={eventDetailID}
+                loggedInUsername={loggedInUsername}
+                isUserLoggedIn={isUserLoggedIn}
             />
         </Box>
     )

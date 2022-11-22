@@ -14,7 +14,7 @@ import {
 import {Auth} from "../api.service";
 import {email_regex, username_regex} from "../regex";
 
-function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
+function AuthModal({openAuthModal, handleAuthClose, setsnackbarState, setLoggedInUserName}) {
     const [loginDetails, setLoginDetails] = React.useState({
       username: "",
       password: "",
@@ -83,6 +83,7 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
         Auth.login(loginDetails)
         .then(() => {
           setsnackbarState({open: true, message: "Succesfully logged in!", severity: "success"});
+          setLoggedInUserName(loginDetails.username);
           handleAuthClose();
         })
         .catch((err)=> {

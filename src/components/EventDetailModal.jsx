@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import moment from 'moment/moment';
 
@@ -13,12 +13,15 @@ import {
   IconButton,
   ListItemButton,
   Divider,
-  Chip
+  Chip,
+  Icon
 } from "@mui/material";
 
 import { Events } from '../api.service';
+import { FavoriteBorder, Favorite } from '@mui/icons-material';
+import { flexbox } from '@mui/system';
 
-function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, eventDetailID}) {
+function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, eventDetailID, loggedInUsername, isUserLoggedIn}) {
 
     const [eventDetails, setEventDetails] = React.useState({
         name: "",
@@ -47,9 +50,26 @@ function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, ev
         }
     })
 
-    Events.get(eventDetailID).then(({data}) => {
-        setEventDetails(data);
-    })
+    const [interest, setInterest] = React.useState(eventDetails.interested.some(acc => acc.username === loggedInUsername))
+
+    useEffect(() => {
+        if(openEventDetailModal) {
+            Events.get(eventDetailID).then(({data}) => {
+                setEventDetails(data);
+            })
+        }
+    }, [openEventDetailModal])
+
+    useEffect(() => {
+        if(!interest && eventDetails.interested.some(acc => acc.username === loggedInUsername)) {
+            Events.removeIntrest(eventDetailID)
+        }
+        else if(interest && !eventDetails.interested.some(acc => acc.username === loggedInUsername)) {
+            Events.addIntrest(eventDetailID)
+        }
+    }, [interest])
+
+    
 
     return(
         <Modal
@@ -66,12 +86,26 @@ function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, ev
                 padding: '1rem',
             }}
             >
+            <div style={{display:'flex', justifyContent:'space-between'}}>
                 <Typography variant='h3'>{eventDetails.name}</Typography>
-                <Typography>{moment(eventDetails.start_time).format("Mo MMM hh:mm A")} to {moment(eventDetails.end_time).format("Mo MMM hh:mm A")}</Typography>
-                <Typography variant='body1'>Created By: {eventDetails.created_by.username}</Typography>
+                { (isUserLoggedIn) ?
+                    <IconButton 
+                    onClick={() => {
+                        setInterest(!interest);
+                        console.log(interest)
+                    }}>{(interest) ? <Favorite/> : <FavoriteBorder/>}</IconButton>
+
+                    :
+
+                    <div></div>                    
+                }
+            </div>
+
+                <Typography>{moment(eventDetails.start_time).format("Mo MMM hh:mm A")} - {moment(eventDetails.end_time).format("Mo MMM hh:mm A")}</Typography>
+                    <Typography variant='body1'>Created By: {eventDetails.created_by.username}</Typography>
 
                 <Divider sx={{my:'1em'}} />
-                <Chip variant='filled' color='info' label={`${eventDetails.current_people} / ${eventDetails.max_people}`}
+                <Chip variant='filled' color='info' label={`${eventDetails.current_people} / ${eventDetails.max_people} People`}
                 sx={{mb:'1em'}}/>
 
                 <Typography variant='body1'>  {eventDetails.description} </Typography>
