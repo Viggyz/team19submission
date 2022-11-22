@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   Modal,
@@ -14,8 +14,9 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-
-import { User } from '../api.service';
+import EventForm from "./EventForm";
+import AddEventForm from "./addEventForm";
+import { User, Events } from "../api.service";
 
 function MyEventsModal({
   openMyEventsModal,
@@ -25,9 +26,23 @@ function MyEventsModal({
   const [myEvents, setMyEvents] = React.useState([]);
   const [openModal, setOpenModal] = React.useState(false);
   const [selectedEvent, setSelectedEvent] = React.useState();
+  const [openEventModal, setOpenEventModal] = React.useState(false);
+  const [eventLocation, setEventLocation] = React.useState();
+  useEffect(() => {
+    if (selectedEvent) {
+      Events.get(selectedEvent.id)
+        .then(({ data }) => {
+          setEventLocation(data.location);
+          console.log(data.location);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [selectedEvent]);
   React.useEffect(() => {
     if (openMyEventsModal) {
-        User.createdEvents()
+      User.createdEvents()
         .then(({ data }) => {
           setMyEvents(data);
         })
@@ -76,7 +91,7 @@ function MyEventsModal({
       >
         <Typography variant="h5">My Events</Typography>
         <List style={{ height: "80vh", overflow: "auto" }}>
-          {myEvents.length ?
+          {myEvents.length ? (
             myEvents.map((event) => {
               return (
                 <ListItem
@@ -94,6 +109,7 @@ function MyEventsModal({
                       onClick={() => {
                         setOpenModal(true);
                         setSelectedEvent(event);
+                        console.log("event");
                       }}
                       color="error"
                     >
@@ -101,20 +117,56 @@ function MyEventsModal({
                     </IconButton>
                   </ListItemButton>
                   <ListItemButton sx={{ flexShrink: 15 }}>
-                    <IconButton aria-label="delete" color="info">
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => {
+                        setOpenEventModal(true);
+                        setSelectedEvent(event);
+                        console.log("event", event);
+                      }}
+                      color="info"
+                    >
                       <EditIcon />
                     </IconButton>
                   </ListItemButton>
                 </ListItem>
               );
             })
-            :
-            (
-              <Typography variant="body1" sx={{color: 'text.secondary'}}>Nothing to show here</Typography>
-            )
-          }
+          ) : (
+            <Typography variant="body1" sx={{ color: "text.secondary" }}>
+              Nothing to show here
+            </Typography>
+          )}
         </List>
       </Paper>
+
+      {/* {eventLocation?(<Modal
+        open={openEventModal}
+        onClose={() => {
+          setOpenEventModal(false);
+        }}
+
+        // style={{width:"fit-content"}}
+      > */}
+      {/* <div>da</div> */}
+      {/* <EventForm location={eventLocation} setsnackbarState={setsnackbarState} handleEventClose={()=>{setOpenEventModal(false)}} userCity={`pass`} /> */}
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <AddEventForm
+          currentLocation={eventLocation}
+          openEventModal={openEventModal}
+          handleEventClose={() => {
+            setOpenEventModal(false);
+          }}
+          useCity={"pass"}
+          setsnackbarState={setsnackbarState}
+          currentEvent={selectedEvent}
+        />
+      </div>
+      {/* </Modal>):null}  */}
       <Modal
         open={openModal}
         onClose={() => {

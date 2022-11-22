@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Locations } from "../api.service";
+import { Locations, Events } from "../api.service";
 import moment from "moment";
 
-function EventForm({ location, setsnackbarState, handleEventClose, userCity }) {
+function EventForm({ location, setsnackbarState, handleEventClose, userCity , currentEvent}) {
   const now = new Date();
   const [eventName, setEventName] = useState("");
   const [startTime, setStartTime] = useState(now);
@@ -21,6 +21,16 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity }) {
     maxPeople: null,
   });
 
+  useEffect(()=>{
+    if(currentEvent){
+      setEventName(currentEvent.name);
+      console.log("currentEvent",currentEvent)
+      setStartTime(currentEvent.start_time);
+      setEndTime(currentEvent.end_time);
+      setDescription(currentEvent.description);
+      setMax_people(currentEvent.maxPeople);
+    }
+  },[currentEvent])
   function validate() {
     let errors = {};
     let now = new Date();
@@ -66,24 +76,43 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity }) {
       }
     }
     
-    Locations.createEvent(locationWithCity, {
-      name: eventName,
-      start_time: startTime,
-      end_time: endTime,
-      description, 
-      max_people: maxPeople,
-    })
-    .then(() => {
-        setsnackbarState({open: true, message: "Event Successfully Created!", severity: "success"});
+    if(currentEvent){
+      Events.update(currentEvent.id,{
+        name: eventName,
+        start_time: startTime,
+        end_time: endTime,
+        description, 
+        max_people: maxPeople,
+      })      
+      .then(() => {
+        setsnackbarState({open: true, message: "Event Successfully Editted!", severity: "success"});
         handleEventClose();
     })
-    .catch((err) => setsnackbarState({open: true, message: "Unable to create event", severity: "error"}))
+    .catch((err) => setsnackbarState({open: true, message: "Unable to edit event", severity: "error"}))
+
+    }
+    else{
+      Locations.createEvent(locationWithCity, {
+        name: eventName,
+        start_time: startTime,
+        end_time: endTime,
+        description, 
+        max_people: maxPeople,
+      })
+      .then(() => {
+          setsnackbarState({open: true, message: "Event Successfully Created!", severity: "success"});
+          handleEventClose();
+      })
+      .catch((err) => setsnackbarState({open: true, message: "Unable to create event", severity: "error"}))
+   
+    }
   }
   return (
     <Box sx={{display:"flex", alignItems:"center", justifyContent:"around", flexDirection:"column" }} className="parent">
       <Typography variant="h5">Create New Event</Typography>
       <TextField  
         error={eventName.length < 3 && errors.eventName } 
+        value={eventName}
         label="Event Name" 
         helperText={eventName.length < 3?!eventName?errors.eventName:"Event name must be greater than 3 characters":"" }
         className="event-textfield"  
@@ -152,7 +181,7 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity }) {
           onChange={(evt) => setMax_people(evt.target.value)} 
           helperText={maxPeople > 12 ?errors.maxPeople:""}
         />
-        <Button variant="contained"   onClick={handleClick} sx={{marginBottom: "1rem"}}>ADD EVENT</Button>
+        <Button variant="contained"   onClick={handleClick} sx={{marginBottom: "1rem"}}>{currentEvent?"EDIT EVENT":"ADD EVENT"}</Button>
     {/* </div> */}
     </Box>
   );

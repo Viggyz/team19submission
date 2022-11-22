@@ -7,6 +7,7 @@ function AddEventForm({
   currentLocation, 
   setsnackbarState,
   userCity,
+  currentEvent,
 }) {
     return (
       <Modal
@@ -31,6 +32,7 @@ function AddEventForm({
           setsnackbarState={setsnackbarState}
           handleEventClose={handleEventClose}
           userCity={userCity}
+          currentEvent={currentEvent}
         /> 
           
         </Paper>

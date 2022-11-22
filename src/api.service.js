@@ -179,7 +179,7 @@ export class Events {
   }
 
   static update(event_id, payload) {
-    return AuthClient.update(`events/${event_id}`, payload);
+    return AuthClient.put(`events/${event_id}`, payload);
   }
 
   static delete(event_id) {
