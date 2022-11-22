@@ -142,6 +142,9 @@ class SignUpSerializer(serializers.Serializer):
     password = serializers.CharField(required=True, min_length=6, max_length=16, write_only=True)
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
+        try:
+            user = User.objects.create_user(**validated_data)
+            return user
+        except IntegrityError:
+            raise APIException(detail="Username already exists")
     

@@ -106,7 +106,6 @@ function EventsBlock({
                                                 <Box>
                                                     <Typography variant="body1">{event.name}</Typography>
                                                     <Typography variant="caption">{moment(event.start_time).fromNow()}</Typography>
-                                                    {/* <Typography variant="subtitle2">{`${event.current_people}/${event.max_people}`}</Typography> */}
                                                 </Box>
                                             </ListItemButton>
                                         </ListItem>
