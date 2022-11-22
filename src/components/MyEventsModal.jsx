@@ -15,7 +15,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { Events } from '../api.service';
+import { User } from '../api.service';
 
 function MyEventsModal({
   openMyEventsModal,
@@ -27,7 +27,7 @@ function MyEventsModal({
   const [selectedEvent, setSelectedEvent] = React.useState();
   React.useEffect(() => {
     if (openMyEventsModal) {
-      Events.getMyEvents()
+        User.createdEvents()
         .then(({ data }) => {
           setMyEvents(data);
         })
@@ -159,8 +159,7 @@ function MyEventsModal({
                 setOpenModal(false);
                 Events.delete(selectedEvent.id)
                   .then(() => {
-                    updateUserCity()
-                    Events.getMyEvents()
+                    User.createdEvents()
                       .then(({ data }) => {
                         setMyEvents(data);
                       })

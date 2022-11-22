@@ -37,7 +37,7 @@ class SearchAPIView(APIView):
                     return Response({'details': 'Try again in a few seconds'}, status.HTTP_429_TOO_MANY_REQUESTS)
         return Response({'message': 'Search term must be provided'}, status.HTTP_400_BAD_REQUEST)
 
-class LocationListAPIView(APIView):
+class LocationSearchAPIView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
