@@ -52,7 +52,7 @@ function SearchBar({ setUserCoords, setUserCity, setCurrentLocation}) {
                 debouncedCallSearchAPI(newInputValue);
             }
         }}
-        onKeydown={evt => evt}
+        onKeyDown={evt => evt}
         renderInput={(params) => {
           const {InputLabelProps,InputProps,...rest} = params;
 

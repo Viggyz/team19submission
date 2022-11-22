@@ -100,7 +100,7 @@ function App() {
   },[userCity])
   
   useEffect(() => {
-    fetch('https://ipapi.co/json/')
+    fetch('https://api.ipgeolocation.io/ipgeo')
     .then(response => response.json())
     .then(({country_name, latitude, longitude, city}) => {
       if (country_name === 'India') {
