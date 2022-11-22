@@ -1,6 +1,21 @@
 import React from 'react';
 
-import {IconButton, Fab, Box, Paper, Divider, Typography, List, ListItem, ListItemText, Button} from '@mui/material';
+import moment from 'moment/moment';
+
+import {
+    IconButton,
+    Fab, 
+    Box, 
+    Paper, 
+    Divider, 
+    Typography, 
+    List, 
+    ListItem, 
+    ListItemText, 
+    ListItemButton, 
+    ListItemSecondaryAction,
+    Button,
+} from '@mui/material';
 import RoomIcon from '@mui/icons-material/Room';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -38,12 +53,12 @@ function EventsBlock({
             <Paper 
                 sx={{ 
                     height: '85vh',
-                    padding: '1rem', 
                     width: '20vw',
                     minWidth: '250px',
                     display: 'flex',
                     flexDirection: 'column',
-                    position: 'relative'
+                    position: 'relative',
+                    p: 2,
                 }}
             >
                 <Typography variant='h5'>{location?location.name: "Nearby events"}</Typography>
@@ -67,28 +82,33 @@ function EventsBlock({
                             {
                                 currentEvents && currentEvents.length ? currentEvents.map(event => {
                                     return (
-                                        <ListItem key={event.id} sx={{display: 'flex', justifyContent: 'end'}}>
-                                            <Button sx={{flexGrow: 40, textAlign:'left'}}
+                                        <ListItem 
+                                            key={event.id} 
+                                            sx={{display: 'flex', justifyContent: 'end', padding: '0.1rem'}}
+                                            secondaryAction={
+                                                <IconButton 
+                                                sx ={{size: 'small'}}
+                                                onClick={() => {
+                                                    setUserCoords({longitude: event.location.lon, latitude: event.location.lat})
+                                                }}
+                                            > <RoomIcon/> </IconButton>     
+                                            }
+                                        >
+                                            <ListItemButton sx={{flexGrow: 40, textAlign:'left'}}
                                                 onClick={() => {
                                                     passEventID(event.id);
                                                     handleEventDetailModalOpen();
                                                 }}>
-                                                <ListItemText
+                                                {/* <ListItemText
                                                     primary={event.name}
                                                     secondary={event.description}
-                                                />
-                                            </Button>
-                                            <IconButton 
-                                                sx ={{size: 'small'}}
-                                                onClick={() => {
-                                                    setUserCoords({longitude: event.location.lon, latitude: event.location.lat})
-                                                    // Events.addIntrest(event.id)
-                                                    // .then(()=>{
-                                                    //     setsnackbarState({open: true, message: "Successfully Showed interest", severity: "success"})
-                                                    // })
-                                                    // .catch(()=>{setsnackbarState({open: true, message: "Already Showed interest", severity: "error"})})
-                                                }}
-                                            > <RoomIcon/> </IconButton>                                            
+                                                /> */}
+                                                <Box>
+                                                    <Typography variant="body1">{event.name}</Typography>
+                                                    <Typography variant="caption">{moment(event.start_time).fromNow()}</Typography>
+                                                    {/* <Typography variant="subtitle2">{`${event.current_people}/${event.max_people}`}</Typography> */}
+                                                </Box>
+                                            </ListItemButton>
                                         </ListItem>
                                         )
                                     })
