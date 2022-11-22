@@ -20,7 +20,7 @@ import RoomIcon from '@mui/icons-material/Room';
 import AddIcon from '@mui/icons-material/Add';
 
 import { Locations  } from "../api.service";
-import EventDetailModal from './EventDetailModal';
+import EventDetailModal from '../components/EventDetailModal';
 
 function EventsBlock({
     location,

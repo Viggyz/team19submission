@@ -8,7 +8,7 @@ import {
     Divider
 } from "@mui/material";
 
-import MyEventsModal from "./MyEventsModal";
+import MyEventsModal from "../components/MyEventsModal";
 
 
 function userStatusBar({ isUserLoggedIn, removeTokens, handleAuthOpen, setsnackbarState,   openEventModal}) {

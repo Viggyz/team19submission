@@ -123,7 +123,7 @@ export class Locations {
         return backOffAPICall(
           Client.get,
           [
-            "locations",
+            "locations/search",
             {
               params,
             }
