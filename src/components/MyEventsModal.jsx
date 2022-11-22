@@ -76,7 +76,7 @@ function MyEventsModal({
       >
         <Typography variant="h5">My Events</Typography>
         <List style={{ height: "80vh", overflow: "auto" }}>
-          {myEvents &&
+          {myEvents.length ?
             myEvents.map((event) => {
               return (
                 <ListItem
@@ -107,7 +107,12 @@ function MyEventsModal({
                   </ListItemButton>
                 </ListItem>
               );
-            })}
+            })
+            :
+            (
+              <Typography variant="body1" sx={{color: 'text.secondary'}}>Nothing to show here</Typography>
+            )
+          }
         </List>
       </Paper>
       <Modal
@@ -154,7 +159,7 @@ function MyEventsModal({
                 setOpenModal(false);
                 Events.delete(selectedEvent.id)
                   .then(() => {
-                    console.log("ss");
+                    updateUserCity()
                     Events.getMyEvents()
                       .then(({ data }) => {
                         setMyEvents(data);
