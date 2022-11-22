@@ -54,6 +54,7 @@ class EventListSerializer(serializers.ModelSerializer):
         ]
 
 class EventSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     name = serializers.CharField()
     start_time = serializers.DateTimeField()
     end_time = serializers.DateTimeField()
