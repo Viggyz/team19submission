@@ -50,7 +50,7 @@ function MapComponent({userCoords, handleMarkerClick}) {
                 center: [userCoords.longitude, userCoords.latitude],
                 zoom: 14,
             })
-            Locations.list(userCoords.longitude, userCoords.latitude).then(
+            Locations.search(userCoords.longitude, userCoords.latitude).then(
                 (response) => {
                 addMarkers(response.data);
             });

@@ -3,13 +3,13 @@ import "./App.css";
 
 import { Button, Box, Paper, Snackbar, Alert, Typography } from "@mui/material";
 
-import MapComponent from "./components/mapComponent";
-import SearchBar  from "./components/searchBar";
-import EventsBlock from "./components/eventBlock";
+import MapComponent from "./layout/mapComponent";
+import SearchBar  from "./layout/searchBar";
+import EventsBlock from "./layout/eventBlock";
 
 import AuthModal from "./components/authModal";
 import AddEventForm from "./components/addEventForm"
-import UserStatusBar from "./components/userStatusbar"; 
+import UserStatusBar from "./layout/userStatusBar"; 
 
 import { Locations, Events } from "./api.service";
 

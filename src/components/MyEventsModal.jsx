@@ -15,7 +15,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { Events } from '../api.service';
+import { User } from '../api.service';
 
 function MyEventsModal({
   openMyEventsModal,
@@ -27,7 +27,7 @@ function MyEventsModal({
   const [selectedEvent, setSelectedEvent] = React.useState();
   React.useEffect(() => {
     if (openMyEventsModal) {
-      Events.getMyEvents()
+        User.createdEvents()
         .then(({ data }) => {
           setMyEvents(data);
         })
@@ -76,7 +76,7 @@ function MyEventsModal({
       >
         <Typography variant="h5">My Events</Typography>
         <List style={{ height: "80vh", overflow: "auto" }}>
-          {myEvents &&
+          {myEvents.length ?
             myEvents.map((event) => {
               return (
                 <ListItem
@@ -107,7 +107,12 @@ function MyEventsModal({
                   </ListItemButton>
                 </ListItem>
               );
-            })}
+            })
+            :
+            (
+              <Typography variant="body1" sx={{color: 'text.secondary'}}>Nothing to show here</Typography>
+            )
+          }
         </List>
       </Paper>
       <Modal
@@ -154,8 +159,7 @@ function MyEventsModal({
                 setOpenModal(false);
                 Events.delete(selectedEvent.id)
                   .then(() => {
-                    console.log("ss");
-                    Events.getMyEvents()
+                    User.createdEvents()
                       .then(({ data }) => {
                         setMyEvents(data);
                       })

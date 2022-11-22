@@ -1,6 +1,7 @@
 from requests import HTTPError
 
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.exceptions import PermissionDenied, NotFound
@@ -36,7 +37,7 @@ class SearchAPIView(APIView):
                     return Response({'details': 'Try again in a few seconds'}, status.HTTP_429_TOO_MANY_REQUESTS)
         return Response({'message': 'Search term must be provided'}, status.HTTP_400_BAD_REQUEST)
 
-class LocationListAPIView(APIView):
+class LocationSearchAPIView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
@@ -71,7 +72,11 @@ class LocationEventListAPIView(APIView):
 
     def get(self, request, osm_id):
         try:
-            qs = Location.objects.get(osm_type_id=osm_id).events.order_by('start_time')[:10]
+            qs = Location.objects \
+                .get(osm_type_id=osm_id) \
+                .events \
+                .filter(start_time__gt=timezone.now()) \
+                .order_by('start_time')[:10]
             serializer = EventListSerializer(qs, many=True)
             return Response(serializer.data)
         except Location.DoesNotExist:
@@ -90,7 +95,7 @@ class EventListAPIView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
-        qs = Event.objects.all()
+        qs = Event.objects.filter(start_time__gt=timezone.now())
         if city := request.query_params.get('city', None):
             qs = (
                 qs.filter(city__iexact=city)

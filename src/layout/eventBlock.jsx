@@ -21,7 +21,7 @@ import RoomIcon from '@mui/icons-material/Room';
 import AddIcon from '@mui/icons-material/Add';
 
 import { Locations  } from "../api.service";
-import EventDetailModal from './EventDetailModal';
+import EventDetailModal from '../components/EventDetailModal';
 
 function EventsBlock({
     location,
@@ -113,8 +113,13 @@ function EventsBlock({
                                         )
                                     })
                                     :
-                                    location && (
+                                    location ? 
+                                    (
                                         <Typography variant="body2" sx={{color: 'text.secondary', textAlign: 'center', mt: 2, mx: 2}}>Click "Add Event" to create a new event here!</Typography>
+                                    )
+                                    : 
+                                    (
+                                        <Typography variant="body2" sx={{color: 'text.secondary', textAlign: 'center', mt: 2, mx: 2}}>Click on a location to start adding events</Typography>
                                     )
                             }
                         </List>

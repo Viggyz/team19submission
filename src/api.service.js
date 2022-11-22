@@ -50,7 +50,6 @@ AuthClient.interceptors.response.use(
 );
 
 export function searchPlaces(query) {
-  // TODO do exponential backoff retries
   return backOffAPICall(
     Client.get,
     ["search", {
@@ -116,7 +115,7 @@ export class Auth {
 }
 
 export class Locations {
-    static list(lon, lat) {
+    static search(lon, lat) {
         let params = {
             lon,
             lat,
@@ -124,7 +123,7 @@ export class Locations {
         return backOffAPICall(
           Client.get,
           [
-            "locations",
+            "locations/search",
             {
               params,
             }
@@ -168,10 +167,6 @@ export class Events {
     return AuthClient.delete(`events/${event_id}/interested`);
   }
 
-  static getMyEvents() {
-    return AuthClient.get('events/created');
-  }
-
   static list(query=null) {
     let params = query && {'city': query}; 
     return Client.get('events', {
@@ -189,5 +184,14 @@ export class Events {
 
   static delete(event_id) {
     return AuthClient.delete(`events/${event_id}`);
+  }
+}
+
+export class User {
+  static createdEvents() {
+      return AuthClient.get('user/events/created');
+    }
+  static interestedEvents() {
+      return AuthClient.get('user/events/interested');
   }
 }
