@@ -46,13 +46,12 @@ function EventsBlock({
                     position: 'relative'
                 }}
             >
+                <Typography variant='h5'>{location?location.name: "Nearby events"}</Typography>
                 { location &&
                     <Box>
-                        <Typography variant='h5'>{location.name}</Typography>
                         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                             <Typography variant='subtitle1' sx={{textTransform: 'capitalize', color: 'text.secondary'}}>{location.type.replace("_", " ") || ""}</Typography>
                         </Box>
-                        <Divider />
                         <Fab 
                             color='primary' 
                             sx={{position: 'absolute', bottom: '1.5rem', right: '1rem'}}
@@ -62,6 +61,7 @@ function EventsBlock({
                         </Fab>
                     </Box>
                 }
+                <Divider />
                     <Box sx={{height: '100%', overflow: 'auto'}}>
                         <List>
                             {
@@ -93,7 +93,7 @@ function EventsBlock({
                                         )
                                     })
                                     :
-                                    (
+                                    location && (
                                         <Typography variant="body2" sx={{color: 'text.secondary', textAlign: 'center', mt: 2, mx: 2}}>Click "Add Event" to create a new event here!</Typography>
                                     )
                             }

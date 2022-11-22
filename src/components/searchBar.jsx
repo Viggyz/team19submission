@@ -41,7 +41,7 @@ function SearchBar({ setUserCoords, setUserCity, setCurrentLocation}) {
         onChange={(event, newValue) => {
             if(newValue) {
                 setValue(newValue);
-                setUserCity(newValue.address.city || null)
+                setUserCity(newValue.address.city);
                 setUserCoords({longitude: newValue.lon,latitude: newValue.lat})
                 setCurrentLocation(null);
             }

@@ -76,6 +76,20 @@ function App() {
     setIsUserLoggedIn(false);
   }
   
+  function updateUserCity(city) {
+    if (city===userCity) {
+      Events.list(userCity)
+      .then(({data: events}) => {
+        setCurrentEvents(events);
+        setCurrentLocation(null);
+      })
+      .catch(err => console.debug(err));
+    }
+    else {
+      setUserCity(city);
+    }
+  }
+  
   useEffect(() => {
     Events.list(userCity)
     .then(({data: events}) => {
@@ -134,7 +148,7 @@ function App() {
       ></MapComponent>
       <SearchBar 
         setUserCoords={setUserCoords}
-        setUserCity={setUserCity}
+        setUserCity={updateUserCity}
         setCurrentLocation={setCurrentLocation}
       ></SearchBar>
       <EventsBlock 
