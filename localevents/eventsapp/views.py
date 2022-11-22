@@ -123,7 +123,7 @@ class EventDetailAPIView(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
-            return Response(serializer.errors)
+            return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         except Event.DoesNotExist:
             return Response({'detail': 'Invalid event_id passed'}, status.HTTP_400_BAD_REQUEST)
 
