@@ -1,10 +1,10 @@
 from django.db import models
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 from localevents.regex import osm_type_id_regex
-
-validate_id = []
 
 class Location(models.Model):
     osm_type_id = models.CharField(
@@ -57,3 +57,7 @@ class Event(models.Model):
                 name="Max people for an event can only be upto 11"
             ),  
         ]
+    
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    contact_no = models.CharField(max_length=10, default=None)

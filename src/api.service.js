@@ -81,11 +81,12 @@ export class Auth {
     });
   }
 
-  static signUp({ username, email, password }) {
+  static signUp({ username, email, password, contactNo }) {
     return Client.post("auth/signup", {
       username,
       email,
       password,
+      contact_no: contactNo,
     });
   }
 

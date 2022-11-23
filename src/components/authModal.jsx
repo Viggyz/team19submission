@@ -12,7 +12,7 @@ import {
 
 
 import {Auth} from "../api.service";
-import {email_regex, username_regex} from "../regex";
+import {email_regex, username_regex, phone_regex} from "../regex";
 
 function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
     const [loginDetails, setLoginDetails] = React.useState({
@@ -23,12 +23,14 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
         username: "",
         email: "",
         password: "",
+        contactNo: "",
     })
     const [isSignUp, setIsSignUp] = React.useState(false);
     const [errors, setErrors] = React.useState({
       username: null,
       email: null,
       password: null,
+      contactNo: null,
     });
     
     function validateSignup() {
@@ -38,6 +40,9 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
       }
       else if (!email_regex.test(signUpDetails.email)) {
         errors.email = "Invalid email";
+      }
+      if (!phone_regex.test(signUpDetails.contactNo)) {
+        errors.contactNo = "Invalid phoneno";
       }
       if (!signUpDetails.password.length) {
         errors.password = "Password cannot be empty";
@@ -53,6 +58,7 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
         username: null,
         email: null,
         password: null,
+        contactNo: null,
       })
       return true;
     }
@@ -65,6 +71,7 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
             username: "",
             email: "",
             password: "",
+            contactNo: "",
           })
           setsnackbarState({open: true, message: "Succesfully signed up!", severity: "success"});
           handleAuthClose();
@@ -96,6 +103,7 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
         username: "",
         email: "",
         password: "",
+        contactNo: "",
       });
       setLoginDetails({
         username: "",
@@ -105,6 +113,7 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
         username: null,
         email: null,
         password: null,
+        contactNo: null,
       })
 
     },[openAuthModal])
@@ -132,6 +141,27 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
             <div className="signup-Modal">
               <Typography variant='h5' className="signup-label">SIGN UP </Typography>
               <TextField 
+                value={signUpDetails.username} 
+                variant = 'outlined' 
+                label = 'Username' 
+                sx={{
+                  my: '7px', 
+                  width: '75%'
+                }} 
+                onChange={(evt) => {
+                  return setSignUpDetails({...signUpDetails, username: evt.target.value})
+                }}
+                error={!username_regex.test(signUpDetails.username) && errors.username}
+                helperText={
+                  !username_regex.test(signUpDetails.username) && errors.username ?
+                  signUpDetails.username.length < 4?
+                      "Username cannot be less than 4 characters":
+                      errors.username 
+                    :
+                    ""
+                }
+               />
+              <TextField 
                 value={signUpDetails.email} 
                 variant = 'outlined' 
                 label = 'Email' 
@@ -154,22 +184,20 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
               />
 
               <TextField 
-                value={signUpDetails.username} 
+                value={signUpDetails.contactNo} 
                 variant = 'outlined' 
-                label = 'Username' 
+                label = 'Phone no' 
                 sx={{
                   my: '7px', 
                   width: '75%'
                 }} 
                 onChange={(evt) => {
-                  return setSignUpDetails({...signUpDetails, username: evt.target.value})
+                  return setSignUpDetails({...signUpDetails, contactNo: evt.target.value})
                 }}
-                error={!username_regex.test(signUpDetails.username) && errors.username}
+                error={!phone_regex.test(signUpDetails.contactNo) && errors.contactNo && true}
                 helperText={
-                  !username_regex.test(signUpDetails.username) && errors.username ?
-                  signUpDetails.username.length < 4?
-                      "Username cannot be less than 4 characters":
-                      errors.username 
+                  !phone_regex.test(signUpDetails.contactNo) && errors.contactNo ?
+                      errors.contactNo 
                     :
                     ""
                 }
