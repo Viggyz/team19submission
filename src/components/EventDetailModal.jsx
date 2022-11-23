@@ -5,27 +5,22 @@ import moment from 'moment/moment';
 import {
   Modal, 
   Paper,
-  List,
-  ListItem,
-  ListItemText,
   Typography,
-  ButtonGroup,
   IconButton,
-  ListItemButton,
   Divider,
+  Box,
   Chip,
-  Icon
 } from "@mui/material";
 
 import { Events, User } from '../api.service';
-import { FavoriteBorder, Favorite } from '@mui/icons-material';
-import { flexbox } from '@mui/system';
+import { FavoriteBorder, Favorite, PhoneIphone, Email } from '@mui/icons-material';
 
 function EventDetailModal({
         openEventDetailModal,
         handleEventDetailModalClose, 
         eventDetailID, 
-        isUserLoggedIn
+        isUserLoggedIn,
+        handleAuthOpen,
     }) {
 
     const [eventDetails, setEventDetails] = React.useState({
@@ -55,26 +50,36 @@ function EventDetailModal({
         }
     })
 
-    const [interest, setInterest] = React.useState(eventDetails.interested.some(acc => acc.username === User.get().username))
+    const [interest, setInterest] = React.useState(false);
 
     useEffect(() => {
         if(openEventDetailModal) {
-            Events.get(eventDetailID).then(({data}) => {
-                setEventDetails(data);
+            let promises = [Events.get(eventDetailID), User.get()];
+            Promise.allSettled(promises)
+            .then(([eventPromise, userPromise]) =>  {
+                if (eventPromise.status === "fulfilled") {
+                    setEventDetails(eventPromise.value.data);
+                }
+                else {
+                    Promise.reject("Failed to get event");
+                }
+                if (userPromise.status === "fulfilled") {
+                    if(eventPromise.value.data.interested.some(acc => acc.id === userPromise.value.data.id))
+                        setInterest(true);
+                    else {
+                        setInterest(false);
+                    }
+                }
+                else if(userPromise.status === "rejected") {
+                    setInterest(false);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                handleEventDetailModalClose();
             })
         }
     }, [openEventDetailModal])
-
-    useEffect(() => {
-        if(interest) {
-            Events.addIntrest(eventDetailID)
-        }
-        else {
-            Events.removeIntrest(eventDetailID)
-        }
-    }, [interest])
-
-    
 
     return(
         <Modal
@@ -88,32 +93,51 @@ function EventDetailModal({
                 transform: 'translate(-50%, -50%)',
                 width: '80%',
                 boxShadow: 24,
-                padding: '1rem',
+                padding: '2rem',
             }}
             >
             <div style={{display:'flex', justifyContent:'space-between'}}>
                 <Typography variant='h3'>{eventDetails.name}</Typography>
-                { (isUserLoggedIn) ?
                     <IconButton 
-                    onClick={() => {
-                        setInterest(!interest);
-                    }}>{(interest) ? <Favorite/> : <FavoriteBorder/>}</IconButton>
-
-                    :
-
-                    <div></div>                    
-                }
+                        onClick={() => {
+                            if (!isUserLoggedIn) {
+                                handleAuthOpen();
+                            }
+                            else if (interest) {
+                                Events.removeIntrest(eventDetailID)
+                                .then(() => setInterest(false))
+                                .catch(err => console.log(err));
+                            }
+                            else {
+                                Events.addIntrest(eventDetailID)
+                                .then(() => setInterest(true))
+                                .catch(err => console.log(err));
+                            }
+                        }}
+                    >
+                            {(interest && isUserLoggedIn) ? <Favorite/> : <FavoriteBorder/>}
+                    </IconButton>
             </div>
 
                 <Typography>{moment(eventDetails.start_time).format("Mo MMM hh:mm A")} - {moment(eventDetails.end_time).format("Mo MMM hh:mm A")}</Typography>
                     <Typography variant='body1'>Created By: {eventDetails.created_by.username}</Typography>
-
-                <Divider sx={{my:'1em'}} />
-                <Chip variant='filled' color='info' label={`${eventDetails.current_people} / ${eventDetails.max_people} People`}
+                <br/>
+                <Chip variant='filled' color='info' label={`${eventDetails.max_people} People`}
                 sx={{mb:'1em'}}/>
+                <Divider sx={{my:'1em'}} />
 
                 <Typography variant='body1'>  {eventDetails.description} </Typography>
-                
+                <Divider sx={{my:'1em'}} />
+                <Box sx={{display: 'flex', width: "100%", justifyContent: 'space-around'}}>
+                <Box sx={{display: 'flex', justifyContent: 'between', alignItems: 'center', color: 'text.secondary'}}>
+                    <PhoneIphone sx={{mr: 1}} />
+                    <Typography variant="subtitle1">+91 {eventDetails.created_by.contact_no}</Typography>
+                </Box>
+                <Box sx={{display: 'flex', justifyContent: 'between', alignItems: 'center', color: 'text.secondary'}}>
+                    <Email sx={{mr: 1}} />
+                    <Typography variant="subtitle1">{eventDetails.created_by.email}</Typography>
+                </Box>
+                </Box>
             </Paper>
         </Modal>
     )

@@ -19,7 +19,6 @@ function MapComponent({userCoords, handleMarkerClick}) {
                 // const jsele
                 const jsele = (
                     <div className="marker_container">
-                        <div className="marker-text">9/10</div>
                         <div className="marker-icon"></div>
                     </div>
                 );

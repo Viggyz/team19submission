@@ -15,7 +15,7 @@ TAGS = [
     'leisure:swimming',
     'leisure:playground',
     'leisure:dog_park',
-    'leisure:hackerspace',
+    # 'leisure:hackerspace',
 
     ]
 RESPONSE_FORMAT = 'json'

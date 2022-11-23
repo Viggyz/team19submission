@@ -161,6 +161,7 @@ function App() {
         currentEvents={currentEvents}
         handleEventOpen={handleEventOpen}
         setsnackbarState={setsnackbarState}
+        handleAuthOpen={handleAuthOpen}
         setUserCoords={setUserCoords}
         setCurrentEvents={setCurrentEvents}
         isUserLoggedIn={isUserLoggedIn}

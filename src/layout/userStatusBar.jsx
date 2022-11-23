@@ -66,7 +66,7 @@ function userStatusBar({
         <Button
           variant="contained"
           size="small"
-          color="success"
+          color="primary"
           type="out"
           onClick={() => {
             handleAuthOpen(true);

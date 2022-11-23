@@ -10,7 +10,7 @@ from localevents.regex import osm_type_id_regex
 from .models import Location, Event, UserProfile
 
 class UserSerializer(serializers.ModelSerializer):
-    contact_no = serializers.CharField(source="profile.contact_no")
+    contact_no = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = [
@@ -21,6 +21,9 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "contact_no"
         ]
+    
+    def get_contact_no(self, instance):
+        return instance.profile.contact_no
 
 class LocationListSerializer(serializers.Serializer):
     # xid = serializers.CharField()

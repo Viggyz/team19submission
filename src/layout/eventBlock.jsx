@@ -29,7 +29,7 @@ function EventsBlock({
     setCurrentEvents,
     currentEvents,
     handleEventOpen,
-    openAuthModal, 
+    handleAuthOpen, 
     isUserLoggedIn
 }) {
     const [openEventDetailModal, setOpenEventDetailModal] = React.useState(false);
@@ -88,7 +88,6 @@ function EventsBlock({
                                             sx={{display: 'flex', justifyContent: 'end', padding: '0.1rem'}}
                                             secondaryAction={
                                                 <IconButton 
-                                                sx ={{size: 'small'}}
                                                 onClick={() => {
                                                     setUserCoords({longitude: event.location.lon, latitude: event.location.lat})
                                                 }}
@@ -130,6 +129,7 @@ function EventsBlock({
                 handleEventDetailModalClose={handleEventDetailModalClose}
                 eventDetailID={eventDetailID}
                 isUserLoggedIn={isUserLoggedIn}
+                handleAuthOpen={handleAuthOpen}
             />
         </Box>
     )

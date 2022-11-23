@@ -42,7 +42,7 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
         errors.email = "Invalid email";
       }
       if (!phone_regex.test(signUpDetails.contactNo)) {
-        errors.contactNo = "Invalid phoneno";
+        errors.contactNo = "Phone number must be 10 digits and only numbers";
       }
       if (!signUpDetails.password.length) {
         errors.password = "Password cannot be empty";
