@@ -63,7 +63,7 @@ function SearchBar({ setUserCoords, setUserCity, setCurrentLocation}) {
               <InputBase
                 sx={{p:1}}
                 {...params.InputProps} {...rest}
-                placeholder="Enter a location to get started..."
+                placeholder="Enter a location to get started.."
                 />
             </Paper>
           )
