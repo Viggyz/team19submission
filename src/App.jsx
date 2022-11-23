@@ -12,6 +12,7 @@ import AddEventForm from "./components/addEventForm"
 import UserStatusBar from "./layout/userStatusBar"; 
 
 import { Locations, Events } from "./api.service";
+import { SmsFailedRounded } from "@mui/icons-material";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
@@ -76,44 +77,48 @@ function App() {
     setIsUserLoggedIn(false);
   }
   
-  function updateUserCity(city) {
-    if (city===userCity) {
-      Events.list(userCity)
+  function setEvents(city) {
+    Events.list(city)
       .then(({data: events}) => {
         setCurrentEvents(events);
         setCurrentLocation(null);
       })
       .catch(err => console.debug(err));
+  }
+
+  function updateUserCity(city) {
+    if (city===userCity) {
+      setEvents(userCity);
     }
     else {
       setUserCity(city);
     }
   }
+
+  function refreshUserEvents() {
+    setEvents(userCity);
+  }
+  
+  function usePositionCoords(position) {
+    const {latitude, longitude} = position.coords;
+    setUserCoords({ longitude, latitude});
+    Events.list(null, {longitude, latitude})
+      .then(({data: events}) => {
+        setCurrentEvents(events);
+        setCurrentLocation(null);
+      })
+      .catch(err => console.debug(err));
+  }
   
   useEffect(() => {
-    Events.list(userCity)
-    .then(({data: events}) => {
-      setCurrentEvents(events);
-      setCurrentLocation(null);
-    })
-    .catch(err => console.debug(err));
+    refreshUserEvents();
   },[userCity])
-  
+
   useEffect(() => {
-    fetch('https://ipapi.co/json/')
-    .then(response => response.json())
-    .then(({country_name, latitude, longitude, city}) => {
-      if (country_name === 'India') {
-        setUserCoords({ longitude, latitude});
-        setUserCity(city);
-      }
-      else {
-        setUserCoords({longitude: '77.5946',latitude: '12.9716'});
-        setUserCity("Bengaluru");
-        // setUserCoords({ longitude, latitude});
-      }
+    navigator.geolocation.getCurrentPosition(usePositionCoords, () => {
+      setUserCoords({longitude: '77.5946',latitude: '12.9716'});
+      setUserCity("Bengaluru");
     })
-    .catch(err => console.debug(err))
     
     window.addEventListener('addTokens', () => {
       setIsUserLoggedIn(true);
@@ -176,6 +181,7 @@ function App() {
       />
       
     <UserStatusBar
+      refreshUserEvents={refreshUserEvents}
       isUserLoggedIn={isUserLoggedIn}
       removeTokens={removeTokens}
       handleAuthOpen={handleAuthOpen}

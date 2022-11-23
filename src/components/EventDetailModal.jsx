@@ -21,7 +21,12 @@ import { Events, User } from '../api.service';
 import { FavoriteBorder, Favorite } from '@mui/icons-material';
 import { flexbox } from '@mui/system';
 
-function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, eventDetailID, isUserLoggedIn}) {
+function EventDetailModal({
+        openEventDetailModal,
+        handleEventDetailModalClose, 
+        eventDetailID, 
+        isUserLoggedIn
+    }) {
 
     const [eventDetails, setEventDetails] = React.useState({
         name: "",
