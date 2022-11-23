@@ -15,6 +15,7 @@ function userStatusBar({
   removeTokens,
   handleAuthOpen,
   setsnackbarState,
+  openEventModal,
   refreshUserEvents,
 }) 
 {

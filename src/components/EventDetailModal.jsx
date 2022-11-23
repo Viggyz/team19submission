@@ -60,6 +60,15 @@ function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, ev
         }
     }, [openEventDetailModal])
 
+    useEffect(() => {
+        if(interest) {
+            Events.addIntrest(eventDetailID)
+        }
+        else {
+            Events.removeIntrest(eventDetailID)
+        }
+    }, [interest])
+
     
 
     return(
@@ -82,14 +91,7 @@ function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, ev
                 { (isUserLoggedIn) ?
                     <IconButton 
                     onClick={() => {
-                        if(interest) {
-                            Events.removeIntrest(eventDetailID).then(setInterest(false));
-                        }
-                        else {
-                            Events.addIntrest(eventDetailID).then(setInterest(true));
-                        }
-                        console.log(interest)
-
+                        setInterest(!interest);
                     }}>{(interest) ? <Favorite/> : <FavoriteBorder/>}</IconButton>
 
                     :

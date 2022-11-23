@@ -30,7 +30,7 @@ function EventsBlock({
     currentEvents,
     handleEventOpen,
     openAuthModal, 
-    isUserLoggedIn,
+    isUserLoggedIn
 }) {
     const [openEventDetailModal, setOpenEventDetailModal] = React.useState(false);
 
