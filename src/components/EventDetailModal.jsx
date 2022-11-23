@@ -17,11 +17,11 @@ import {
   Icon
 } from "@mui/material";
 
-import { Events } from '../api.service';
+import { Events, User } from '../api.service';
 import { FavoriteBorder, Favorite } from '@mui/icons-material';
 import { flexbox } from '@mui/system';
 
-function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, eventDetailID, loggedInUsername, isUserLoggedIn}) {
+function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, eventDetailID, isUserLoggedIn}) {
 
     const [eventDetails, setEventDetails] = React.useState({
         name: "",
@@ -50,7 +50,7 @@ function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, ev
         }
     })
 
-    const [interest, setInterest] = React.useState(eventDetails.interested.some(acc => acc.username === loggedInUsername))
+    const [interest, setInterest] = React.useState(eventDetails.interested.some(acc => acc.username === User.get().username))
 
     useEffect(() => {
         if(openEventDetailModal) {
@@ -59,15 +59,6 @@ function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, ev
             })
         }
     }, [openEventDetailModal])
-
-    useEffect(() => {
-        if(!interest && eventDetails.interested.some(acc => acc.username === loggedInUsername)) {
-            Events.removeIntrest(eventDetailID)
-        }
-        else if(interest && !eventDetails.interested.some(acc => acc.username === loggedInUsername)) {
-            Events.addIntrest(eventDetailID)
-        }
-    }, [interest])
 
     
 
@@ -91,8 +82,14 @@ function EventDetailModal({openEventDetailModal, handleEventDetailModalClose, ev
                 { (isUserLoggedIn) ?
                     <IconButton 
                     onClick={() => {
-                        setInterest(!interest);
+                        if(interest) {
+                            Events.removeIntrest(eventDetailID).then(setInterest(false));
+                        }
+                        else {
+                            Events.addIntrest(eventDetailID).then(setInterest(true));
+                        }
                         console.log(interest)
+
                     }}>{(interest) ? <Favorite/> : <FavoriteBorder/>}</IconButton>
 
                     :

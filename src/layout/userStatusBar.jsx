@@ -10,16 +10,14 @@ import {
 
 import MyEventsModal from "../components/MyEventsModal";
 
-
 function userStatusBar({ 
   isUserLoggedIn,
   removeTokens,
   handleAuthOpen,
   setsnackbarState,
-  openEventModal,
-  setLoggedInUsername,
   refreshUserEvents,
-}) {
+}) 
+{
   const [openMyEventsModal, setOpenMyEventsModal] = React.useState(false);
   
   const handleMyEventsOpen = () => setOpenMyEventsModal(true);
@@ -50,7 +48,6 @@ function userStatusBar({
               size="small"
               onClick={() => {
                 removeTokens();
-                setLoggedInUsername('')
               }}
             >
               Log out
