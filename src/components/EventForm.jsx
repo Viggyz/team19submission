@@ -109,7 +109,7 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
   }
   return (
     <Box sx={{display:"flex", alignItems:"center", justifyContent:"around", flexDirection:"column" }} className="parent">
-      <Typography variant="h5">Create New Event</Typography>
+      <Typography variant="h5">{currentEvent?"Edit Event":"Create New Event"}</Typography>
       <TextField  
         error={eventName.length < 3 && errors.eventName } 
         value={eventName}
