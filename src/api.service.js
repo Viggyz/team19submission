@@ -188,6 +188,10 @@ export class Events {
 }
 
 export class User {
+  static get() {
+    return AuthClient.get('user');
+  }
+
   static createdEvents() {
       return AuthClient.get('user/events/created');
     }

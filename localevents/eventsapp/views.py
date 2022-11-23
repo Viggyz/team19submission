@@ -14,6 +14,7 @@ from .serializers import (
     EventListSerializer,
     EventInterestSerializer,
     EventSerializer,
+    UserSerializer,
     LocationListSerializer, 
     LocationSerializer,
     SignUpSerializer, 
@@ -184,3 +185,11 @@ class SignUpAPIView(APIView):
             
             return Response({"message": "User successfully created"}, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+class UserDetailAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+        
