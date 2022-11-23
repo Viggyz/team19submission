@@ -103,6 +103,14 @@ class EventListAPIView(APIView):
                 if qs.filter(city__iexact=city).exists()
                 else qs
             )
+        elif (lat:=request.query_params.get('lat', None)) and (lon:=request.query_params.get('lon', None)):
+            response_json = GeoServiceClient.reverse_geocode(lat=lat, lon=lon)
+            if response_json["address"] and (city:=response_json["address"]["city"]):
+                qs = (
+                    qs.filter(city__iexact=city)
+                    if qs.filter(city__iexact=city).exists()
+                    else qs
+                )
         serializer = EventListSerializer(qs, many=True)
         return Response(serializer.data)
 

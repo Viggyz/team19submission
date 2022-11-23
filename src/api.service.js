@@ -167,8 +167,17 @@ export class Events {
     return AuthClient.delete(`events/${event_id}/interested`);
   }
 
-  static list(query=null) {
-    let params = query && {'city': query}; 
+  static list(city=null, latlon=null) {
+    let params;
+    if (city) {
+      params = {city}
+    }
+    else if(latlon) {
+      params = {
+        lat:latlon.latitude,
+        lon:latlon.longitude,
+      }
+    }
     return Client.get('events', {
       params
     });

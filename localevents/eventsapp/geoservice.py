@@ -63,5 +63,16 @@ class GeoServiceClient:
             
             'dedupe': 1,
             'limit': '5',
+            'format': RESPONSE_FORMAT,
         }
         return GeoServiceClient.get('autocomplete', query_params)
+
+    @staticmethod
+    def reverse_geocode(lat, lon):
+        query_params = {
+            'lon': lon,
+            'lat': lat,
+
+            'format': RESPONSE_FORMAT,
+        }
+        return GeoServiceClient.get('reverse', query_params)
