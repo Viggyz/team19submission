@@ -45,7 +45,7 @@ function EventsBlock({
         <Box id='events-block' sx={{
             zIndex: 1, 
             position: 'absolute', 
-            right: {xs: '0', md: "0"}, 
+            right: {xs: '0', md: "1.5rem"}, 
             bottom: {xs: '0', md: '1.5rem'},
             minWidth: '250px',
             boxSizing: 'border-box'
