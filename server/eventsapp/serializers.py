@@ -5,7 +5,7 @@ from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied, APIException
 from rest_framework import serializers
 
-from localevents.regex import osm_type_id_regex
+from server.regex import osm_type_id_regex
 
 from .models import Location, Event, UserProfile
 

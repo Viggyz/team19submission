@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-from localevents.regex import osm_type_id_regex
+from server.regex import osm_type_id_regex
 
 class Location(models.Model):
     osm_type_id = models.CharField(
