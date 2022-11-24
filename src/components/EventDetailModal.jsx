@@ -121,14 +121,18 @@ function EventDetailModal({
 
                 <Typography>{moment(eventDetails.start_time).format("Mo MMM hh:mm A")} - {moment(eventDetails.end_time).format("Mo MMM hh:mm A")}</Typography>
                     <Typography variant='body1'>Created By: {eventDetails.created_by.username}</Typography>
-                <br/>
                 <Chip variant='filled' color='info' label={`${eventDetails.max_people} People`}
-                sx={{mb:'1em'}}/>
+                sx={{mx:'0.5rem'}}/>
                 <Divider sx={{my:'1em'}} />
 
                 <Typography variant='body1'>  {eventDetails.description} </Typography>
                 <Divider sx={{my:'1em'}} />
-                <Box sx={{display: 'flex', width: "100%", justifyContent: 'space-around'}}>
+                <Box sx={{
+                    display: 'flex',
+                    width: "100%",
+                    justifyContent: 'space-around',
+                    flexDirection: {xs: 'column', md: 'row'}
+                }}>
                 <Box sx={{display: 'flex', justifyContent: 'between', alignItems: 'center', color: 'text.secondary'}}>
                     <PhoneIphone sx={{mr: 1}} />
                     <Typography variant="subtitle1">+91 {eventDetails.created_by.contact_no}</Typography>

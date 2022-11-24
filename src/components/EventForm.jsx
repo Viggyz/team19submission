@@ -12,7 +12,7 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
   const [startTime, setStartTime] = useState(now);
   const [endTime, setEndTime] = useState(now);
   const [description, setDescription] = useState("");
-  const [maxPeople, setMax_people] = useState(1);
+  const [maxPeople, setMaxPeople] = useState(1);
   const [errors, setErrors] = useState({
     eventName: null,
     startTime: null,
@@ -27,7 +27,7 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
       setStartTime(currentEvent.start_time);
       setEndTime(currentEvent.end_time);
       setDescription(currentEvent.description);
-      setMax_people(currentEvent.max_people);
+      setMaxPeople(currentEvent.max_people);
     }
   },[currentEvent])
   function validate() {
@@ -179,7 +179,7 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
           defaultValue={maxPeople}  
           type="number" 
           label="Max people" 
-          onChange={(evt) => setMax_people(evt.target.value)} 
+          onChange={(evt) => setMaxPeople(evt.target.value)} 
           helperText={maxPeople > 12 ?errors.maxPeople:""}
         />
         <Button variant="contained"   onClick={handleClick} sx={{marginBottom: "1rem"}}>{currentEvent?"EDIT EVENT":"ADD EVENT"}</Button>
