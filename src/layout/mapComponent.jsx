@@ -24,6 +24,13 @@ function MapComponent({userCoords, handleMarkerClick}) {
                 );
                 element.onclick = () => {
                     handleMarkerClick(location); 
+                    console.log(location);
+                    if(map.current){
+                        map.current.flyTo({
+                            center: [location.lon, location.lat],
+                            zoom: 16,
+                        })
+                    }
                 };
                 element.innerHTML = renderToStaticMarkup(jsele);
                 return new Marker(element)

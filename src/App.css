@@ -34,7 +34,7 @@ height: 100%;
 }
 
 .marker-icon{
-    background-image: url('/src/location.png');
+    background-image: url('/src/location-pin.png');
 background-size: contain;
 width: 30px;
 height: 30px;
