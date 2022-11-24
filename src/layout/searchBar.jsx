@@ -25,9 +25,15 @@ function SearchBar({ setUserCoords, setUserCity, setCurrentLocation}) {
 
   return (
     <div id="search-bar">
-      <Autocomplete
+    <Autocomplete
         id="basic-search"
-        sx={{ width: 300, position: 'absolute', top: '1rem', left: "1rem" }}
+        sx={{ 
+          width: { xs: "100vw", md: "20vw"}, 
+          position: 'absolute', 
+          top: {xs: "2.5rem", md: "1rem"}, 
+          margin: {xs: "0 1rem 0 0 ", md:"0"},
+          left: {xs: "0rem", md: "1rem"},
+        }}
         options={options}
         getOptionLabel={(option) =>
           option && option.display_name || ""
@@ -58,7 +64,8 @@ function SearchBar({ setUserCoords, setUserCity, setCurrentLocation}) {
 
           return (
             <Paper component="form" elevation={4} sx = {{
-              minWidth: '400px',
+              width: { xs: "100vw", md: "20vw"}, 
+              left: 0
             }}>
               <InputBase
                 sx={{p:1}}

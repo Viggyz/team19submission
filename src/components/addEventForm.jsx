@@ -11,8 +11,10 @@ function AddEventForm({
 }) {
     return (
       <Modal
-    open={openEventModal}
-    onClose={handleEventClose}>
+      sx={{margin: {xs: "1rem", md: 0}}}
+      open={openEventModal}
+      onClose={handleEventClose}
+    >
       <Box>
         <Paper 
             style={{

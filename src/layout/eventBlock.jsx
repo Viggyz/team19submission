@@ -45,21 +45,23 @@ function EventsBlock({
         <Box id='events-block' sx={{
             zIndex: 1, 
             position: 'absolute', 
-            right: "1rem", 
-            bottom: '1.5rem',
+            right: {xs: '0', md: "0"}, 
+            bottom: {xs: '0', md: '1.5rem'},
             minWidth: '250px',
+            boxSizing: 'border-box'
         }}
         elevation={3}
         >
             <Paper 
                 sx={{ 
-                    height: '85vh',
-                    width: '20vw',
+                    height: {xs: '35vh', md: '85vh'},
+                    width: {xs: '100vw', md: '20vw'},
                     minWidth: '250px',
                     display: 'flex',
                     flexDirection: 'column',
                     position: 'relative',
-                    p: 2,
+                    p: {xs: 1, md: 2},
+                    boxSizing: 'border-box'
                 }}
             >
                 <Typography variant='h5'>{location?location.name: "Nearby events"}</Typography>
