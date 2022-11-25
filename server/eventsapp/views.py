@@ -1,9 +1,7 @@
 from requests import HTTPError
 
-from django.contrib.auth.models import User
 from django.utils import timezone
 
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.response import Response 
 from rest_framework.views import APIView
@@ -15,7 +13,6 @@ from .serializers import (
     EventInterestSerializer,
     EventSerializer,
     UserSerializer,
-    LocationListSerializer, 
     LocationSerializer,
     SignUpSerializer, 
 )
@@ -44,7 +41,7 @@ class LocationSearchAPIView(APIView):
     def get(self, request):
         if (longitude := request.query_params.get('lon', None)) and (latitude := request.query_params.get('lat', None)):
             try:
-                response_json = GeoServiceClient.get_places(30000, longitude, latitude)
+                response_json = GeoServiceClient.getPOIs(30000, longitude, latitude)
                 return Response(response_json)
             except HTTPError as HE:
                 if (HE.response.status_code == 404):
@@ -55,7 +52,6 @@ class LocationSearchAPIView(APIView):
                     return Response({'details': 'Try again in a few seconds'}, status.HTTP_429_TOO_MANY_REQUESTS)
         return Response({'message': 'Latitude and longitude need to be passed as query params'}, status.HTTP_400_BAD_REQUEST)
 
-# class Events Mine 
 class LocationDetailAPIView(APIView):
     permission_classes = (permissions.AllowAny,)
 

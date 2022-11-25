@@ -1,7 +1,6 @@
 from .base import *
 
 import dj_database_url
-import psycopg2
 import django_on_heroku
 from decouple import config
 
@@ -35,6 +34,10 @@ LOGGING = {
         },
     },
 }
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://\w+\.herokuapp\.com$",
+]
 
 DATABASES = {
     "default": dj_database_url.config(

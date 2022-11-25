@@ -1,26 +1,17 @@
 from django.db import models
-from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
-from django.dispatch import receiver
-from django.db.models.signals import post_save
-
-from server.regex import osm_type_id_regex
 
 class Location(models.Model):
     osm_type_id = models.CharField(
         max_length=11, 
         unique=True, 
         db_index=True,
-        validators=[
-            RegexValidator(osm_type_id_regex)
-        ]
     )
     name = models.CharField(max_length=255)
     place = models.CharField(max_length=255)
     address = models.JSONField()
     lat = models.FloatField(default=12.9732913)
     lon = models.FloatField(default=77.6404672)
-    # description = models.TextField()
 
 class Event(models.Model):
     name = models.CharField(max_length=255)
@@ -31,7 +22,6 @@ class Event(models.Model):
     end_time = models.DateTimeField(blank=True, null=True)
     
     description = models.TextField(blank=True, null=True)
-    # image = models.FileField()
     
     interested = models.ManyToManyField(
         User,

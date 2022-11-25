@@ -1,48 +1,14 @@
-from django.contrib.auth.models import User
 from django.db import transaction, IntegrityError
 from django.utils import timezone
 
-from rest_framework.exceptions import PermissionDenied, APIException
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied, APIException
 
-from server.regex import osm_type_id_regex
+from ..models import Event, Location
 
-from .models import Location, Event, UserProfile
+from .location import LocationCoordsSerializer, LocationSerializer
+from .user import UserSerializer 
 
-class UserSerializer(serializers.ModelSerializer):
-    contact_no = serializers.SerializerMethodField()
-    class Meta:
-        model = User
-        fields = [
-            "id",
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "contact_no"
-        ]
-    
-    def get_contact_no(self, instance):
-        return instance.profile.contact_no
-
-class LocationListSerializer(serializers.Serializer):
-    # xid = serializers.CharField()
-    # name = serializers.CharField(allow_null=True)
-    kinds = serializers.CharField()
-    rate = serializers.IntegerField()
-    dist = serializers.FloatField()
-    point = serializers.JSONField()
-
-class LocationSerializer(serializers.ModelSerializer): 
-    osm_type_id = serializers.RegexField(regex=osm_type_id_regex)
-    class Meta:
-        model = Location
-        fields = '__all__'
-
-class LocationCoordsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = ["lat", "lon", "osm_type_id"]
 class EventListSerializer(serializers.ModelSerializer):
     location = LocationCoordsSerializer()
 
@@ -122,7 +88,7 @@ class EventSerializer(serializers.Serializer):
         if data["end_time"] < data["start_time"]:
             raise serializers.ValidationError("An event cannot end before it begins")
         return data
-    
+
 class EventInterestSerializer(serializers.Serializer):
     event_id = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all(), write_only=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -142,21 +108,3 @@ class EventInterestSerializer(serializers.Serializer):
         if data['user'] in data['event_id'].interested.all():
             raise serializers.ValidationError('Already added to interested')
         return data
-
-class SignUpSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True, min_length=4, write_only=True)
-    email = serializers.EmailField(required=True,write_only=True)
-    password = serializers.CharField(required=True, min_length=6, max_length=16, write_only=True)
-    contact_no = serializers.CharField(required=True,max_length=10, min_length=10, write_only=True)
-
-    user = UserSerializer(read_only=True)
-
-    def create(self, validated_data):
-        try:
-            contact_no = validated_data.pop('contact_no')
-            user = User.objects.create_user(**validated_data)
-            UserProfile.objects.create(user=user, contact_no=contact_no)
-            return {'user': user}
-        except IntegrityError:
-            raise APIException(detail="Username already exists")
-    

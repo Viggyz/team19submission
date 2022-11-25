@@ -1,12 +1,9 @@
 import requests
-from requests.exceptions import RequestException
 
 from decouple import config
 
 BASE_API_URL = 'https://eu1.locationiq.com/v1'
 TAGS = [
-    # 'park',
-    # 'stadium',
     'amenity:community_centre',
     
     'leisure:park',
@@ -15,12 +12,11 @@ TAGS = [
     'leisure:swimming',
     'leisure:playground',
     'leisure:dog_park',
-    # 'leisure:hackerspace',
+    'leisure:hackerspace',
 
     ]
 RESPONSE_FORMAT = 'json'
 PLACE_TYPES = [
-    'city',
     'borough', 
     'suburb', 
     'quarter', 
@@ -39,7 +35,7 @@ class GeoServiceClient:
         return response.json()
     
     @staticmethod
-    def get_places(radius: int, lon: float, lat: float):
+    def getPOIs(radius: int, lon: float, lat: float):
         query_params = {
             'radius': radius,
             'lon': lon,

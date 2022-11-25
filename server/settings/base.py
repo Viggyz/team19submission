@@ -65,10 +65,6 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-# CORS_ALLOWED_ORIGIN_REGEXES = [
-#     r"^https://\w+\.herokuapp\.com$",
-# ]
-
 ROOT_URLCONF = 'server.urls'
 
 TEMPLATES = [
@@ -123,14 +119,6 @@ REST_FRAMEWORK  = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-# REST_FRAMEWORK = {
-#     'DEFAULT_RENDERER_CLASSES': [
-#         'rest_framework.renderers.JSONRenderer',
-#     ],
-#     'DEFAULT_PARSER_CLASSES': [
-#         'rest_framework.parsers.JSONParser',
-#     ]
-# }
 
 
 # Internationalization
