@@ -42,7 +42,7 @@ function MapComponent({ userCoords, handleMarkerClick }) {
     if (map.current) return;
     map.current = new Map({
       container: mapContainer.current,
-      style: "https://api.maptiler.com/maps/streets",
+      style: "https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL",
       center: ["77.5946", "12.9716"],
       zoom: 10,
     });
