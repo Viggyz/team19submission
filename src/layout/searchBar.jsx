@@ -1,27 +1,32 @@
-import React from "react";
+import { useState, useCallback } from "react";
 
-import {Paper, TextField, InputBase, Box, Autocomplete, Grid, Typography } from "@mui/material";
+import {
+  Paper,
+  InputBase, 
+  Autocomplete, 
+  Grid, 
+  Typography,
+} from "@mui/material";
 
 import {searchPlaces} from "../api.service";
 
 import {debouncedAPICall} from "../utils";
 
 function SearchBar({ setUserCoords, setUserCity, setCurrentLocation}) {
-  const [value, setValue] = React.useState(null);
-  const [inputValue, setInputValue] = React.useState("");
-  const [options, setOptions] = React.useState([]);
+  const [value, setValue] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [options, setOptions] = useState([]);
 
   function callSearchAPI(inputText) {
       if (inputText.length > 3) {
         searchPlaces(inputText)
         .then(({ data }) => {
-          // handle its a bad request
           setOptions(data);
         });
       }
     }
 
-  const debouncedCallSearchAPI = React.useCallback(debouncedAPICall(callSearchAPI), []);
+  const debouncedCallSearchAPI = useCallback(debouncedAPICall(callSearchAPI), []);
 
   return (
     <div id="search-bar">
@@ -41,8 +46,6 @@ function SearchBar({ setUserCoords, setUserCity, setCurrentLocation}) {
         isOptionEqualToValue={(option, value) => option.display_name === value.display_name}
         filterOptions={(x) => x}
         autoComplete
-        // includeInputInList
-        // filterSelectedOptions
         value={value}
         onChange={(event, newValue) => {
             if(newValue) {

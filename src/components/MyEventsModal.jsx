@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import {
   Modal,
@@ -15,10 +15,10 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import EventForm from "./EventForm";
-import moment from "moment/moment"; 
-import AddEventForm from "./addEventForm";
+
 import { User, Events } from "../api.service";
+
+import AddEventForm from "./addEventForm";
 
 function MyEventsModal({
   openMyEventsModal,
@@ -26,11 +26,11 @@ function MyEventsModal({
   setsnackbarState,
   refreshUserEvents,
 }) {
-  const [myEvents, setMyEvents] = React.useState([]);
-  const [openModal, setOpenModal] = React.useState(false);
-  const [selectedEvent, setSelectedEvent] = React.useState();
-  const [openEventModal, setOpenEventModal] = React.useState(false);
-  const [currentEvent, setCurrentEvent] = React.useState();
+  const [myEvents, setMyEvents] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState();
+  const [openEventModal, setOpenEventModal] = useState(false);
+  const [currentEvent, setCurrentEvent] = useState();
   function setCreatedEvents() {
     User.createdEvents()
     .then(({ data }) => {
@@ -55,7 +55,7 @@ function MyEventsModal({
         });
     }
   }, [selectedEvent]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (openMyEventsModal) {
       setCreatedEvents();
     }
@@ -81,11 +81,7 @@ function MyEventsModal({
     >
       <Paper
         style={{
-          // position: "relative",
           backgroundColor: "white",
-          // top: "50%",
-          // left: "50%",
-          // transform: "translate(-50%, -25%)",
           width: "80%",
           boxShadow: 24,
           padding: "1rem",
@@ -155,16 +151,6 @@ function MyEventsModal({
         </List>
       </Paper>
 
-      {/* {eventLocation?(<Modal
-        open={openEventModal}
-        onClose={() => {
-          setOpenEventModal(false);
-        }}
-
-        // style={{width:"fit-content"}}
-      > */}
-      {/* <div>da</div> */}
-      {/* <EventForm location={eventLocation} setsnackbarState={setsnackbarState} handleEventClose={()=>{setOpenEventModal(false)}} userCity={`pass`} /> */}
       <div
         onClick={(e) => {
           e.stopPropagation();
@@ -182,14 +168,11 @@ function MyEventsModal({
           currentEvent={currentEvent}
         />
       </div>
-      {/* </Modal>):null}  */}
       <Modal
         open={openModal}
         onClose={() => {
           setOpenModal(false);
         }}
-
-        // style={{width:"fit-content"}}
       >
         <Paper
           style={{

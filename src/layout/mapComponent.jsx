@@ -1,9 +1,9 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import {useRef, useState, useEffect} from "react"
+
+import { Map, Marker } from "maplibre-gl";
+
 import { Locations } from "../api.service";
-import maplibregl, { Marker } from "maplibre-gl";
-
-
 
 function MapComponent({userCoords, handleMarkerClick}) {
     const mapContainer = useRef(null);
@@ -16,7 +16,6 @@ function MapComponent({userCoords, handleMarkerClick}) {
             locationData.map((location) => {
                 const element = document.createElement("div");
                 element.id = "marker";
-                // const jsele
                 const jsele = (
                     <div className="marker_container">
                         <div className="marker-icon"></div>
@@ -41,12 +40,12 @@ function MapComponent({userCoords, handleMarkerClick}) {
 
     useEffect(() => {
         if (map.current) return;
-        map.current = new maplibregl.Map({
+        map.current = new Map({
             container: mapContainer.current,
             style:
-              "https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL", // stylesheet location
-            center: ['77.5946', '12.9716'], // starting position [lng, lat]
-            zoom: 10, // starting zoom
+              "https://api.maptiler.com/maps/streets",
+            center: ['77.5946', '12.9716'],
+            zoom: 10,
           });
     }, [])
     useEffect(() => {

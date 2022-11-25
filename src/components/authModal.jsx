@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   Link,
@@ -15,18 +15,18 @@ import {Auth} from "../api.service";
 import {email_regex, username_regex, phone_regex} from "../regex";
 
 function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
-    const [loginDetails, setLoginDetails] = React.useState({
+    const [loginDetails, setLoginDetails] = useState({
       username: "",
       password: "",
     });
-    const [signUpDetails, setSignUpDetails] = React.useState({
+    const [signUpDetails, setSignUpDetails] = useState({
         username: "",
         email: "",
         password: "",
         contactNo: "",
     })
-    const [isSignUp, setIsSignUp] = React.useState(false);
-    const [errors, setErrors] = React.useState({
+    const [isSignUp, setIsSignUp] = useState(false);
+    const [errors, setErrors] = useState({
       username: null,
       email: null,
       password: null,

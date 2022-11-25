@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
 
 import moment from 'moment/moment';
-
 import {
   Modal, 
   Paper,
@@ -11,9 +11,9 @@ import {
   Box,
   Chip,
 } from "@mui/material";
+import { FavoriteBorder, Favorite, PhoneIphone, Email } from '@mui/icons-material';
 
 import { Events, User } from '../api.service';
-import { FavoriteBorder, Favorite, PhoneIphone, Email } from '@mui/icons-material';
 
 function EventDetailModal({
         openEventDetailModal,
@@ -23,7 +23,7 @@ function EventDetailModal({
         handleAuthOpen,
     }) {
 
-    const [eventDetails, setEventDetails] = React.useState({
+    const [eventDetails, setEventDetails] = useState({
         name: "",
         start_time: "",
         end_time: "",
@@ -50,7 +50,7 @@ function EventDetailModal({
         }
     })
 
-    const [interest, setInterest] = React.useState(false);
+    const [interest, setInterest] = useState(false);
 
     useEffect(() => {
         if(openEventDetailModal) {

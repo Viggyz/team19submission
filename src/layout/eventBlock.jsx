@@ -1,44 +1,35 @@
-import React from 'react';
+import {useState} from 'react';
 
 import moment from 'moment';
-
 import {
     IconButton,
     Fab, 
     Box,
-    Chip, 
     Paper, 
     Divider, 
     Typography, 
     List, 
     ListItem, 
-    ListItemText, 
     ListItemButton, 
-    ListItemSecondaryAction,
-    Button,
 } from '@mui/material';
 import RoomIcon from '@mui/icons-material/Room';
 import AddIcon from '@mui/icons-material/Add';
 
-import { Locations  } from "../api.service";
 import EventDetailModal from '../components/EventDetailModal';
 
 function EventsBlock({
     location,
     setUserCoords,
-    setCurrentEvents,
     currentEvents,
     handleEventOpen,
     handleAuthOpen, 
     isUserLoggedIn
 }) {
-    const [openEventDetailModal, setOpenEventDetailModal] = React.useState(false);
+    const [openEventDetailModal, setOpenEventDetailModal] = useState(false);
+    const [eventDetailID, setEventDetailID] = useState(null)
 
     const handleEventDetailModalOpen = () => setOpenEventDetailModal(true);
     const handleEventDetailModalClose = () => setOpenEventDetailModal(false);
-
-    const [eventDetailID, setEventDetailID] = React.useState(null)
-
     const passEventID = (id) => {setEventDetailID(id)}
 
     return (
@@ -101,10 +92,6 @@ function EventsBlock({
                                                     passEventID(event.id);
                                                     handleEventDetailModalOpen();
                                                 }}>
-                                                {/* <ListItemText
-                                                    primary={event.name}
-                                                    secondary={event.description}
-                                                /> */}
                                                 <Box>
                                                     <Typography variant="body1">{event.name}</Typography>
                                                     <Typography variant="caption">{moment(event.start_time).fromNow()}</Typography>

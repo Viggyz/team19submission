@@ -1,10 +1,10 @@
 import { TextField, Box, Button, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useState, useEffect, useState } from "react";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 import { Locations, Events } from "../api.service";
-import moment from "moment";
 
 function EventForm({ location, setsnackbarState, handleEventClose, userCity , currentEvent}) {
   const now = new Date();

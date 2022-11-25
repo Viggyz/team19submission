@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-import { Button, Box, Paper, Snackbar, Alert, Typography } from "@mui/material";
+import { Snackbar, Alert } from "@mui/material";
+
+import { Locations, Events } from "./api.service";
 
 import MapComponent from "./layout/mapComponent";
 import SearchBar  from "./layout/searchBar";
 import EventsBlock from "./layout/eventBlock";
+import UserStatusBar from "./layout/userStatusBar"; 
 
 import AuthModal from "./components/authModal";
 import AddEventForm from "./components/addEventForm"
-import UserStatusBar from "./layout/userStatusBar"; 
 
-import { Locations, Events } from "./api.service";
-import { SmsFailedRounded } from "@mui/icons-material";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
@@ -140,7 +140,6 @@ function App() {
         open={snackbarState.open}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
-        // message={snackbarState.message}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert onClose={handleSnackbarClose} severity={snackbarState.severity} sx={{ width: '100%' }}>

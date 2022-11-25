@@ -1,10 +1,9 @@
-import React from 'react';
+import { useState } from 'react';
 
 import {
     Box,
     Paper,
     Button,
-    Typography,
     Divider
 } from "@mui/material";
 
@@ -15,11 +14,10 @@ function userStatusBar({
   removeTokens,
   handleAuthOpen,
   setsnackbarState,
-  openEventModal,
   refreshUserEvents,
 }) 
 {
-  const [openMyEventsModal, setOpenMyEventsModal] = React.useState(false);
+  const [openMyEventsModal, setOpenMyEventsModal] = useState(false);
   
   const handleMyEventsOpen = () => setOpenMyEventsModal(true);
   const handleMyEventsClose = () => setOpenMyEventsModal(false);
