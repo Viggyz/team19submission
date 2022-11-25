@@ -35,7 +35,7 @@ function SearchBar({ setUserCoords, setUserCity, setCurrentLocation }) {
       <Autocomplete
         id="basic-search"
         sx={{
-          width: { xs: "100vw", md: "20vw" },
+          width: { xs: "100vw", md: "30vw" },
           position: "absolute",
           top: { xs: "2.5rem", md: "1rem" },
           margin: { xs: "0 1rem 0 0 ", md: "0" },
@@ -72,8 +72,9 @@ function SearchBar({ setUserCoords, setUserCity, setCurrentLocation }) {
               component="form"
               elevation={4}
               sx={{
-                width: { xs: "100vw", md: "20vw" },
+                width: { xs: "95vw", md: "35vw" },
                 left: 0,
+                margin: { xs: "2.5vw", md: "0"}
               }}
             >
               <InputBase

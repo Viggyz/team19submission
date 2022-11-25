@@ -107,6 +107,7 @@ class EventListAPIView(APIView):
                     if qs.filter(city__iexact=city).exists()
                     else qs
                 )
+        qs = qs.order_by('start_time')
         serializer = EventListSerializer(qs, many=True)
         return Response(serializer.data)
 
