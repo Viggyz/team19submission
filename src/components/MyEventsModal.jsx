@@ -8,8 +8,6 @@ import {
   ListItemText,
   Typography,
   Button,
-  Box,
-  ButtonGroup,
   IconButton,
   ListItemButton,
 } from "@mui/material";
@@ -33,16 +31,16 @@ function MyEventsModal({
   const [currentEvent, setCurrentEvent] = useState();
   function setCreatedEvents() {
     User.createdEvents()
-    .then(({ data }) => {
-      setMyEvents(data);
-    })
-    .catch((err) =>
-      setsnackbarState({
-        open: true,
-        message: "Could not retrieve own events",
-        severity: "error",
+      .then(({ data }) => {
+        setMyEvents(data);
       })
-    );
+      .catch((err) =>
+        setsnackbarState({
+          open: true,
+          message: "Could not retrieve own events",
+          severity: "error",
+        })
+      );
   }
   useEffect(() => {
     if (selectedEvent) {
@@ -102,44 +100,40 @@ function MyEventsModal({
                   <ListItemText
                     primary={event.name}
                     secondary={event.description}
-                    sx={{ flexGrow: 40, color: new Date(event.start_time) > new Date()?'text.primary': 'text.secondary' }}
-                  >
-                  </ListItemText>
-                  {
-                    new Date(event.start_time) > new Date() && 
-                    (   
-                      <>
-                        <ListItemButton 
-                          sx={{ flexShrink: 15 }}
-                          onClick={() => {
-                            setOpenModal(true);
-                            setSelectedEvent(event);
-                          }}
-                          >
-                          <IconButton
-                            aria-label="delete"
-                            color="error"
-                            >
-                            <DeleteIcon />
-                          </IconButton>
-                        </ListItemButton>
-                        <ListItemButton 
-                          sx={{ flexShrink: 15 }}
-                          onClick={() => {
-                            setOpenEventModal(true);
-                            setSelectedEvent(event);
-                          }}
-                        >
-                          <IconButton
-                            aria-label="delete"
-                            color="info"
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </ListItemButton>
-                      </>
-                    )
-                  }
+                    sx={{
+                      flexGrow: 40,
+                      color:
+                        new Date(event.start_time) > new Date()
+                          ? "text.primary"
+                          : "text.secondary",
+                    }}
+                  ></ListItemText>
+                  {new Date(event.start_time) > new Date() && (
+                    <>
+                      <ListItemButton
+                        sx={{ flexShrink: 15 }}
+                        onClick={() => {
+                          setOpenModal(true);
+                          setSelectedEvent(event);
+                        }}
+                      >
+                        <IconButton aria-label="delete" color="error">
+                          <DeleteIcon />
+                        </IconButton>
+                      </ListItemButton>
+                      <ListItemButton
+                        sx={{ flexShrink: 15 }}
+                        onClick={() => {
+                          setOpenEventModal(true);
+                          setSelectedEvent(event);
+                        }}
+                      >
+                        <IconButton aria-label="delete" color="info">
+                          <EditIcon />
+                        </IconButton>
+                      </ListItemButton>
+                    </>
+                  )}
                 </ListItem>
               );
             })
@@ -208,7 +202,7 @@ function MyEventsModal({
               variant="outlined"
               onClick={() => {
                 Events.delete(selectedEvent.id)
-                .then(() => {
+                  .then(() => {
                     refreshUserEvents();
                     setCreatedEvents();
                     setOpenModal(false);

@@ -1,21 +1,15 @@
-import {
-    Modal,
-    Box,
-    Paper,
-} from "@mui/material";
+import { Modal, Box, Paper } from "@mui/material";
 
 function userEvents() {
-    return (
-        <Modal>
-            <Box>
-                <Paper>
-                    <Typography>
-
-                    </Typography>
-                </Paper>
-            </Box>
-        </Modal>
-    )
+  return (
+    <Modal>
+      <Box>
+        <Paper>
+          <Typography></Typography>
+        </Paper>
+      </Box>
+    </Modal>
+  );
 }
 
-export default userEvents; 
+export default userEvents;

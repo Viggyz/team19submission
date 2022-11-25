@@ -1,27 +1,21 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import {
-    Box,
-    Paper,
-    Button,
-    Divider
-} from "@mui/material";
+import { Box, Paper, Button, Divider } from "@mui/material";
 
 import MyEventsModal from "../components/MyEventsModal";
 
-function userStatusBar({ 
+function userStatusBar({
   isUserLoggedIn,
   removeTokens,
   handleAuthOpen,
   setsnackbarState,
   refreshUserEvents,
-}) 
-{
+}) {
   const [openMyEventsModal, setOpenMyEventsModal] = useState(false);
-  
+
   const handleMyEventsOpen = () => setOpenMyEventsModal(true);
   const handleMyEventsClose = () => setOpenMyEventsModal(false);
-  
+
   return (
     <Box
       id="logged-in-bar"
@@ -37,11 +31,14 @@ function userStatusBar({
               px: 1,
             }}
           >
-            <Button
-              onClick={handleMyEventsOpen}
-              size="small"
-            >My Events</Button>
-            <Divider orientation='vertical' flexItem sx={{maxHeight:'80%', mx:'8px'}}/>
+            <Button onClick={handleMyEventsOpen} size="small">
+              My Events
+            </Button>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ maxHeight: "80%", mx: "8px" }}
+            />
             <Button
               color="error"
               size="small"
@@ -56,9 +53,8 @@ function userStatusBar({
             refreshUserEvents={refreshUserEvents}
             openMyEventsModal={openMyEventsModal}
             setsnackbarState={setsnackbarState}
-            handleMyEventsClose={handleMyEventsClose} 
-          >
-          </MyEventsModal>
+            handleMyEventsClose={handleMyEventsClose}
+          ></MyEventsModal>
         </div>
       ) : (
         <Button

@@ -1,12 +1,18 @@
 import { TextField, Box, Button, Typography } from "@mui/material";
 import { useState, useEffect, useState } from "react";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { Locations, Events } from "../api.service";
 
-function EventForm({ location, setsnackbarState, handleEventClose, userCity , currentEvent}) {
+function EventForm({
+  location,
+  setsnackbarState,
+  handleEventClose,
+  userCity,
+  currentEvent,
+}) {
   const now = new Date();
   const [eventName, setEventName] = useState("");
   const [startTime, setStartTime] = useState(now);
@@ -21,33 +27,33 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
     maxPeople: null,
   });
 
-  useEffect(()=>{
-    if(currentEvent){
+  useEffect(() => {
+    if (currentEvent) {
       setEventName(currentEvent.name);
       setStartTime(currentEvent.start_time);
       setEndTime(currentEvent.end_time);
       setDescription(currentEvent.description);
       setMaxPeople(currentEvent.max_people);
     }
-  },[currentEvent])
+  }, [currentEvent]);
   function validate() {
     let errors = {};
     let now = new Date();
-    if (!eventName || !eventName.length) 
+    if (!eventName || !eventName.length)
       errors.eventName = "Event name cannot be empty";
-    else if(eventName.length < 3) 
+    else if (eventName.length < 3)
       errors.eventName = "Event name must be greater than 3 characters";
     if (startTime < now) {
       errors.startTime = "Cannot set an event in the past";
     }
-    if(new Date(endTime) < new Date(startTime)) {
+    if (new Date(endTime) < new Date(startTime)) {
       errors.endTime = "End time cannot be before start time";
     }
     if (!description || !description.length) {
       errors.description = "Description cannot be blank";
     }
     if (maxPeople > 12) {
-      errors.maxPeople = "Max people cannot be greater than 12"
+      errors.maxPeople = "Max people cannot be greater than 12";
     }
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
@@ -63,75 +69,95 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
     return true;
   }
 
-  const handleClick = ()=>{
+  const handleClick = () => {
     if (!validate()) {
       return;
     }
-    
-    if(currentEvent){
-      Events.update(currentEvent.id,{
+
+    if (currentEvent) {
+      Events.update(currentEvent.id, {
         ...currentEvent,
         name: eventName,
         start_time: startTime,
         end_time: endTime,
-        description, 
+        description,
         max_people: maxPeople,
-      })      
-      .then(() => {
-        setsnackbarState({open: true, message: "Event Successfully Editted!", severity: "success"});
-        handleEventClose();
-    })
-    .catch((er7r) => setsnackbarState({open: true, message: "Unable to edit event", severity: "error"}))
-
-    }
-    else{
+      })
+        .then(() => {
+          setsnackbarState({
+            open: true,
+            message: "Event Successfully Editted!",
+            severity: "success",
+          });
+          handleEventClose();
+        })
+        .catch(() =>
+          setsnackbarState({
+            open: true,
+            message: "Unable to edit event",
+            severity: "error",
+          })
+        );
+    } else {
       let locationWithCity = {
         ...location,
         address: {
           city: userCity,
-          ...location.address
-        }
-      }
+          ...location.address,
+        },
+      };
       Locations.createEvent(locationWithCity, {
         name: eventName,
         start_time: startTime,
         end_time: endTime,
-        description, 
+        description,
         max_people: maxPeople,
       })
-      .then(() => {
-          setsnackbarState({open: true, message: "Event Successfully Created!", severity: "success"});
+        .then(() => {
+          setsnackbarState({
+            open: true,
+            message: "Event Successfully Created!",
+            severity: "success",
+          });
           handleEventClose();
-      })
-      .catch((err) => setsnackbarState({open: true, message: "Unable to create event", severity: "error"}))
-   
+        })
+        .catch(() =>
+          setsnackbarState({
+            open: true,
+            message: "Unable to create event",
+            severity: "error",
+          })
+        );
     }
-  }
+  };
   return (
-    <Box sx={{display:"flex", alignItems:"center", justifyContent:"around", flexDirection:"column" }} className="parent">
-      <Typography variant="h5">{currentEvent?"Edit Event":"Create New Event"}</Typography>
-      <TextField  
-        error={eventName.length < 3 && errors.eventName } 
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "around",
+        flexDirection: "column",
+      }}
+      className="parent"
+    >
+      <Typography variant="h5">
+        {currentEvent ? "Edit Event" : "Create New Event"}
+      </Typography>
+      <TextField
+        error={eventName.length < 3 && errors.eventName}
         value={eventName}
-        label="Event Name" 
-        helperText={eventName.length < 3?!eventName?errors.eventName:"Event name must be greater than 3 characters":"" }
-        className="event-textfield"  
-        onChange={(evt) => setEventName(evt.target.value)} 
-      />
-        {/* <TextField
-        
+        label="Event Name"
+        helperText={
+          eventName.length < 3
+            ? !eventName
+              ? errors.eventName
+              : "Event name must be greater than 3 characters"
+            : ""
+        }
         className="event-textfield"
-          type="datetime-local"
-          defaultValue={startTime}
-          label="Start Time"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          onChange={(evt) => {
-            setStartTime(evt.target.value);
-          }}
-        /> */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        onChange={(evt) => setEventName(evt.target.value)}
+      />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateTimePicker
           label="Start date and time"
           value={startTime}
@@ -139,11 +165,11 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
             setStartTime(value);
           }}
           renderInput={(params) => (
-            <TextField 
-              {...params} 
+            <TextField
+              {...params}
               className="event-textfield"
-              error ={startTime < new Date() && errors.startTime}
-              helperText={startTime < new Date() ?errors.startTime:""}
+              error={startTime < new Date() && errors.startTime}
+              helperText={startTime < new Date() ? errors.startTime : ""}
             />
           )}
         />
@@ -154,36 +180,41 @@ function EventForm({ location, setsnackbarState, handleEventClose, userCity , cu
             setEndTime(value);
           }}
           renderInput={(params) => (
-            <TextField 
-              {...params} 
+            <TextField
+              {...params}
               className="event-textfield"
-              error ={endTime < startTime && errors.endTime}
-              helperText={endTime < startTime ?errors.endTime: ""}
+              error={endTime < startTime && errors.endTime}
+              helperText={endTime < startTime ? errors.endTime : ""}
             />
           )}
         />
-        </LocalizationProvider>
-        <TextField 
-          error={!description.length && errors.description}
-        helperText={!description.length?errors.description:""}
+      </LocalizationProvider>
+      <TextField
+        error={!description.length && errors.description}
+        helperText={!description.length ? errors.description : ""}
         multiline
-          rows={3}
-          className="event-textfield" 
-          label="Description" 
-          value={description}
-          onChange={(evt) => setDescription(evt.target.value)} 
-        />
-        <TextField 
-          className="event-textfield" 
-          error={maxPeople > 12 && errors.maxPeople} 
-          defaultValue={maxPeople}  
-          type="number" 
-          label="Max people" 
-          onChange={(evt) => setMaxPeople(evt.target.value)} 
-          helperText={maxPeople > 12 ?errors.maxPeople:""}
-        />
-        <Button variant="contained"   onClick={handleClick} sx={{marginBottom: "1rem"}}>{currentEvent?"EDIT EVENT":"ADD EVENT"}</Button>
-    {/* </div> */}
+        rows={3}
+        className="event-textfield"
+        label="Description"
+        value={description}
+        onChange={(evt) => setDescription(evt.target.value)}
+      />
+      <TextField
+        className="event-textfield"
+        error={maxPeople > 12 && errors.maxPeople}
+        defaultValue={maxPeople}
+        type="number"
+        label="Max people"
+        onChange={(evt) => setMaxPeople(evt.target.value)}
+        helperText={maxPeople > 12 ? errors.maxPeople : ""}
+      />
+      <Button
+        variant="contained"
+        onClick={handleClick}
+        sx={{ marginBottom: "1rem" }}
+      >
+        {currentEvent ? "EDIT EVENT" : "ADD EVENT"}
+      </Button>
     </Box>
   );
 }

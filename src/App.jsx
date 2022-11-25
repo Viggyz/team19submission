@@ -6,13 +6,12 @@ import { Snackbar, Alert } from "@mui/material";
 import { Locations, Events } from "./api.service";
 
 import MapComponent from "./layout/mapComponent";
-import SearchBar  from "./layout/searchBar";
+import SearchBar from "./layout/searchBar";
 import EventsBlock from "./layout/eventBlock";
-import UserStatusBar from "./layout/userStatusBar"; 
+import UserStatusBar from "./layout/userStatusBar";
 
 import AuthModal from "./components/authModal";
-import AddEventForm from "./components/addEventForm"
-
+import AddEventForm from "./components/addEventForm";
 
 function App() {
   const [userCoords, setUserCoords] = useState();
@@ -20,19 +19,20 @@ function App() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [currentEvents, setCurrentEvents] = useState(null);
   const [openEventModal, setOpenEventModal] = useState(false);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(localStorage.getItem("access")?true:false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(
+    localStorage.getItem("access") ? true : false
+  );
   const [snackbarState, setsnackbarState] = useState({
     open: false,
     message: "",
-    severity: "success"
-  })
+    severity: "success",
+  });
   const [openAuthModal, setOpenAuthModal] = useState(false);
-  
+
   const handleEventOpen = () => {
     if (isUserLoggedIn) {
       setOpenEventModal(true);
-    }
-    else {
+    } else {
       setOpenAuthModal(true);
     }
   };
@@ -43,54 +43,52 @@ function App() {
   const handleAuthOpen = () => setOpenAuthModal(true);
   const handleAuthClose = () => setOpenAuthModal(false);
   const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
     setsnackbarState({
       ...snackbarState,
-      open:false
+      open: false,
     });
   };
 
-
   function handleMarkerClick(location) {
-    if(location) {
+    if (location) {
       setCurrentLocation(location);
-      if(location) {
+      if (location) {
         Locations.events(location)
-        .then(({data}) => {
-          return setCurrentEvents(data);
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            setCurrentEvents([])
-          }
-        })
+          .then(({ data }) => {
+            return setCurrentEvents(data);
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 404) {
+              setCurrentEvents([]);
+            }
+          });
       }
     }
   }
- 
+
   function removeTokens() {
     window.localStorage.removeItem("access");
     window.localStorage.removeItem("refresh");
     setIsUserLoggedIn(false);
   }
-  
+
   function setEvents(city) {
     Events.list(city)
-      .then(({data: events}) => {
+      .then(({ data: events }) => {
         setCurrentEvents(events);
         setCurrentLocation(null);
       })
-      .catch(err => console.debug(err));
+      .catch((err) => console.debug(err));
   }
 
   function updateUserCity(city) {
-    if (city===userCity) {
+    if (city === userCity) {
       setEvents(userCity);
-    }
-    else {
+    } else {
       setUserCity(city);
     }
   }
@@ -98,51 +96,56 @@ function App() {
   function refreshUserEvents() {
     setEvents(userCity);
   }
-  
+
   function usePositionCoords(position) {
-    const {latitude, longitude} = position.coords;
-    setUserCoords({ longitude, latitude});
-    Events.list(null, {longitude, latitude})
-      .then(({data: events}) => {
+    const { latitude, longitude } = position.coords;
+    setUserCoords({ longitude, latitude });
+    Events.list(null, { longitude, latitude })
+      .then(({ data: events }) => {
         setCurrentEvents(events);
         setCurrentLocation(null);
       })
-      .catch(err => console.debug(err));
+      .catch((err) => console.debug(err));
   }
-  
+
   useEffect(() => {
     refreshUserEvents();
-  },[userCity])
+  }, [userCity]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(usePositionCoords, () => {
-      setUserCoords({longitude: '77.5946',latitude: '12.9716'});
+      setUserCoords({ longitude: "77.5946", latitude: "12.9716" });
       setUserCity("Bengaluru");
-    })
-    
-    window.addEventListener('addTokens', () => {
+    });
+
+    window.addEventListener("addTokens", () => {
       setIsUserLoggedIn(true);
     });
-    window.addEventListener('removeTokens', () => {
+    window.addEventListener("removeTokens", () => {
       setIsUserLoggedIn(false);
     });
     return () => {
-      window.removeEventListener('addTokens', () => setIsUserLoggedIn(true));
-      window.removeEventListener('removeTokens', () => setIsUserLoggedIn(false));
-    }
+      window.removeEventListener("addTokens", () => setIsUserLoggedIn(true));
+      window.removeEventListener("removeTokens", () =>
+        setIsUserLoggedIn(false)
+      );
+    };
   }, []);
-
 
   return (
     <div className="map-wrap">
-      <Snackbar 
-        sx={{zIndex: '10'}}
+      <Snackbar
+        sx={{ zIndex: "10" }}
         open={snackbarState.open}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbarState.severity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarState.severity}
+          sx={{ width: "100%" }}
+        >
           {snackbarState.message}
         </Alert>
       </Snackbar>
@@ -150,12 +153,12 @@ function App() {
         userCoords={userCoords}
         handleMarkerClick={handleMarkerClick}
       ></MapComponent>
-      <SearchBar 
+      <SearchBar
         setUserCoords={setUserCoords}
         setUserCity={updateUserCity}
         setCurrentLocation={setCurrentLocation}
       ></SearchBar>
-      <EventsBlock 
+      <EventsBlock
         location={currentLocation}
         currentEvents={currentEvents}
         handleEventOpen={handleEventOpen}
@@ -166,28 +169,25 @@ function App() {
         isUserLoggedIn={isUserLoggedIn}
       />
       <AddEventForm
-      openEventModal={openEventModal}
-      handleEventClose={handleEventClose}
-      currentLocation={currentLocation}
-      setsnackbarState={setsnackbarState}
-      userCity={userCity}
-      >
-
-      </AddEventForm>
+        openEventModal={openEventModal}
+        handleEventClose={handleEventClose}
+        currentLocation={currentLocation}
+        setsnackbarState={setsnackbarState}
+        userCity={userCity}
+      ></AddEventForm>
       <AuthModal
         handleAuthClose={handleAuthClose}
         openAuthModal={openAuthModal}
         setsnackbarState={setsnackbarState}
       />
-      
-    <UserStatusBar
-      refreshUserEvents={refreshUserEvents}
-      isUserLoggedIn={isUserLoggedIn}
-      removeTokens={removeTokens}
-      handleAuthOpen={handleAuthOpen}
-      setsnackbarState={setsnackbarState}
-    />
-      
+
+      <UserStatusBar
+        refreshUserEvents={refreshUserEvents}
+        isUserLoggedIn={isUserLoggedIn}
+        removeTokens={removeTokens}
+        handleAuthOpen={handleAuthOpen}
+        setsnackbarState={setsnackbarState}
+      />
     </div>
   );
 }
