@@ -53,7 +53,7 @@ function MapComponent({userCoords, handleMarkerClick}) {
         if (userCoords) {
             map.current.flyTo({
                 center: [userCoords.longitude, userCoords.latitude],
-                zoom: 14,
+                zoom: 17,
             })
             Locations.search(userCoords.longitude, userCoords.latitude).then(
                 (response) => {

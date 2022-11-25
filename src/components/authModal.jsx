@@ -115,7 +115,7 @@ function AuthModal({openAuthModal, handleAuthClose, setsnackbarState}) {
         password: null,
         contactNo: null,
       })
-
+      setIsSignUp(false);
     },[openAuthModal])
     
     return (
