@@ -1,3 +1,9 @@
+# Further Details
+
+Hosted link: https://team19-submission.herokuapp.com/
+
+Medium article: https://medium.com/@f20190008/urbanmeet-8a54a3545305
+
 # Installation instruction
 
 Built on python version 3.9.15
