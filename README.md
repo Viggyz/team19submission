@@ -1,4 +1,4 @@
-Full-stack app to create and host local events for communities.
+**Full-stack app to create and host local events for communities.**
 
 Submission for the Bits Pilani Postman API Hackathon 2.0
 
